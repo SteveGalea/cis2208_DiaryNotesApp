@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.diarynotesapp.api.model.Quote;
+import com.example.diarynotesapp.api.rest.QuotesRestRepository;
+
 public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
@@ -17,4 +20,6 @@ public class HomeViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+
 }

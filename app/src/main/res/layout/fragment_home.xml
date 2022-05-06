@@ -59,6 +59,15 @@
         android:background="#000000"
         app:layout_constraintTop_toBottomOf="@+id/textClock" />
 
+    <!--Quote container-->
+    <TextView
+        android:id="@+id/quote_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"/>
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/extended_fab_task"
         android:layout_width="wrap_content"

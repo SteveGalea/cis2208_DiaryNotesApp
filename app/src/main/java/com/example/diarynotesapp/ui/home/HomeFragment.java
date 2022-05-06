@@ -1,5 +1,7 @@
 package com.example.diarynotesapp.ui.home;
 
+import static com.example.diarynotesapp.R.id.quote_container;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.diarynotesapp.R;
+import com.example.diarynotesapp.api.model.Quote;
+import com.example.diarynotesapp.api.rest.QuotesRestRepository;
 import com.example.diarynotesapp.databinding.FragmentHomeBinding;
 
 import java.text.SimpleDateFormat;
@@ -45,7 +49,33 @@ public class HomeFragment extends Fragment {
         //final TextView textView = binding.textHome;
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        System.out.println("in here1");
+        //load quote
+        //final TextView quoteContainer = root.findViewById(quote_container);
+        //loadQuote();
         return root;
+    }
+    public void loadQuote() {
+        System.out.println("in here2");
+        //QuotesRestRepository.getInstance().fetchRandomQuote();//.observe(getViewLifecycleOwner(), this::populateQuoteContainer);
+
+    }
+
+
+    private void populateQuoteContainer(Quote quote) {
+
+        TextView text2 = binding.getRoot().findViewById(quote_container);
+        if(quote != null){
+           // TextView text;
+            //text = new TextView(this.getContext());
+            text2.setText(quote.getText() + " : " + quote.getAuthor());
+        }else{
+            //TextView
+             //       text = binding.getRoot().findViewById(quote_container);
+            //text.setText("Failed to fetch users");
+            text2.setText("Failed to fetch users");
+        }
     }
 
     @Override
