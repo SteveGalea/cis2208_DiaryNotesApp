@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DiaryNotesApp</string>
+    <string name="title_home">Home</string>
+    <string name="title_tasks">Tasks</string>
+    <string name="title_notes">Notes</string>
+    <string name="title_alerts">Alerts</string>
+    <string name="extended_fab_note">Add Note</string>
+    <string name="extended_fab_task">Add Task</string>
+    <string name="extended_fab_refresh">Refresh</string>
+</resources>
