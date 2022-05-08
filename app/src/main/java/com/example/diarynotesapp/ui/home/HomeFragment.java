@@ -1,14 +1,19 @@
 package com.example.diarynotesapp.ui.home;
 
-import static com.example.diarynotesapp.R.id.quote_container;
+import static com.example.diarynotesapp.R.id.quote;
 
 import android.os.Bundle;
+import android.telecom.Call;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatCallback;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,18 +23,24 @@ import com.example.diarynotesapp.api.rest.QuotesRestRepository;
 import com.example.diarynotesapp.databinding.FragmentHomeBinding;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{
 
     FragmentHomeBinding binding;
     private TextView dateTimeDisplay;
+    private TextView quoteDisplay;
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
     private String date;
+    private Button refreshQuoteButton;
+    //private OnClickListener onClickListener = new OnClickListener() {
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
+
+
+        public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
@@ -50,37 +61,56 @@ public class HomeFragment extends Fragment {
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        System.out.println("in here1");
+        //quote
+        quoteDisplay = (TextView) root.findViewById(R.id.quote);
+
+
+        refreshQuoteButton = (Button) root.findViewById(R.id.refreshQuoteButton);
+
+        refreshQuoteButton.post(new Runnable(){
+            @Override
+            public void run() {
+                refreshQuoteButton.performClick();
+            }
+        });
+        System.out.println("button clicked to fill data");
+
+
         //load quote
-        //final TextView quoteContainer = root.findViewById(quote_container);
-        //loadQuote();
+        refreshQuoteButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println("here");
+                QuotesRestRepository.getInstance().fetchQuote().observe(getViewLifecycleOwner(), this::populateQuoteContainer);
+                //System.out.println("Quote: "+q.getText());
+                Toast toast = Toast.makeText(v.getContext(),
+                        "Getting a new Quote",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            public void populateQuoteContainer(Quote quote) {
+                // checking quote (if Get request was successful returns quote, else returns null)
+                if(quote != null){
+                    if(quote.getAuthor() == null){
+                        quote.setAuthor("Anonymous"); // fixing data quality issue
+                    }
+                    quoteDisplay.setText(quote.getText() + "\n~" + quote.getAuthor());
+                }else{
+                    quoteDisplay.setText("Failed to fetch a quote because you are not connected to the internet! Otherwise, the quote provider website is down.");
+
+                }
+            }
+        });
+
         return root;
     }
-    public void loadQuote() {
-        System.out.println("in here2");
-        //QuotesRestRepository.getInstance().fetchRandomQuote();//.observe(getViewLifecycleOwner(), this::populateQuoteContainer);
 
-    }
-
-
-    private void populateQuoteContainer(Quote quote) {
-
-        TextView text2 = binding.getRoot().findViewById(quote_container);
-        if(quote != null){
-           // TextView text;
-            //text = new TextView(this.getContext());
-            text2.setText(quote.getText() + " : " + quote.getAuthor());
-        }else{
-            //TextView
-             //       text = binding.getRoot().findViewById(quote_container);
-            //text.setText("Failed to fetch users");
-            text2.setText("Failed to fetch users");
-        }
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 }

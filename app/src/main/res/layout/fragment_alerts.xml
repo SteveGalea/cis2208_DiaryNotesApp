@@ -40,7 +40,7 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/extended_fab_refresh"
         android:text="@string/extended_fab_refresh"
-        app:icon="@drawable/ic_add_24dp"
+        app:icon="@drawable/ic_baseline_refresh_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
