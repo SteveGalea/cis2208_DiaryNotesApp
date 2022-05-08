@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView android:id="@+id/card"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical">
+    <!-- card from material broken,  I would like to not show image of card, but an icon in my Imageview-->
+    <ImageView
+        android:id="@+id/card_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:padding="16dp"
+        android:contentDescription="Card Image"
+        />
+    <!--android:src="@drawable/ic_alerts_black_24dp"-->
+    <TextView
+        android:id="@+id/card_primaryText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_toEndOf="@id/card_icon"
+        android:maxLines="1"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/card_secondaryText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/card_primaryText"
+        android:layout_gravity="center_vertical"
+        android:layout_toEndOf="@id/card_icon"
+        android:maxLines="2"
+        android:paddingEnd="16dp"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/card_read_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/card_secondaryText"
+        android:layout_gravity="center_vertical"
+        android:layout_toEndOf="@id/card_primaryText"
+        android:maxLines="1"
+        android:paddingEnd="16dp"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/black" />
+</LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
