@@ -2,6 +2,7 @@ package com.example.diarynotesapp.ui.home;
 
 import static com.example.diarynotesapp.R.id.quote;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.telecom.Call;
 import android.view.Gravity;
@@ -15,12 +16,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatCallback;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.api.model.Quote;
 import com.example.diarynotesapp.api.rest.QuotesRestRepository;
 import com.example.diarynotesapp.databinding.FragmentHomeBinding;
+import com.example.diarynotesapp.ui.TaskActivity;
+import com.example.diarynotesapp.ui.tasks.TasksFragment;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +43,8 @@ public class HomeFragment extends Fragment{
     private SimpleDateFormat dateFormat;
     private String date;
     private Button refreshQuoteButton;
+    private Button redirectButtonTasks;
+    private ExtendedFloatingActionButton extendedFabTask;
     //private OnClickListener onClickListener = new OnClickListener() {
 
 
@@ -47,6 +56,8 @@ public class HomeFragment extends Fragment{
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
 
         //adding date
         //get view and calendar
@@ -61,11 +72,32 @@ public class HomeFragment extends Fragment{
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
+
+        //FAB
+            extendedFabTask.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    System.out.println("here");
+                    Toast toast = Toast.makeText(v.getContext(),
+                            "Adding new Task",
+                            Toast.LENGTH_SHORT);
+                    toast.show();
+                    Intent intent = new Intent(getActivity(), TaskActivity.class);
+                    startActivity(intent);
+                /*TasksFragment fragment2 = new TasksFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.home_fragment, fragment2);
+                fragmentTransaction.commit();*/
+
+                }
+            });
         //quote
         quoteDisplay = (TextView) root.findViewById(R.id.quote);
 
 
         refreshQuoteButton = (Button) root.findViewById(R.id.refreshQuoteButton);
+        redirectButtonTasks = (Button) root.findViewById(R.id.redirectButtonTasks);
 
         refreshQuoteButton.post(new Runnable(){
             @Override
@@ -103,6 +135,23 @@ public class HomeFragment extends Fragment{
             }
         });
 
+
+        redirectButtonTasks.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println("here");
+                Toast toast = Toast.makeText(v.getContext(),
+                        "Going to tasks",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                /*TasksFragment fragment2 = new TasksFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.home_fragment, fragment2);
+                fragmentTransaction.commit();*/
+
+            }
+        });
         return root;
     }
 
