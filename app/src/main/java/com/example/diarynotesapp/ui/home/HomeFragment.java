@@ -1,11 +1,7 @@
 package com.example.diarynotesapp.ui.home;
 
-import static com.example.diarynotesapp.R.id.quote;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.telecom.Call;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +10,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatCallback;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.api.model.Quote;
 import com.example.diarynotesapp.api.rest.QuotesRestRepository;
 import com.example.diarynotesapp.databinding.FragmentHomeBinding;
+import com.example.diarynotesapp.ui.NoteActivity;
 import com.example.diarynotesapp.ui.TaskActivity;
-import com.example.diarynotesapp.ui.tasks.TasksFragment;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -45,6 +36,7 @@ public class HomeFragment extends Fragment{
     private Button refreshQuoteButton;
     private Button redirectButtonTasks;
     private ExtendedFloatingActionButton extendedFabTask;
+    private ExtendedFloatingActionButton extendedFabNote;
     //private OnClickListener onClickListener = new OnClickListener() {
 
 
@@ -59,6 +51,7 @@ public class HomeFragment extends Fragment{
 
         extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
 
+        extendedFabNote = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_note);
         //adding date
         //get view and calendar
         dateTimeDisplay = (TextView)root.findViewById(R.id.text_display_date);
@@ -84,12 +77,18 @@ public class HomeFragment extends Fragment{
                     toast.show();
                     Intent intent = new Intent(getActivity(), TaskActivity.class);
                     startActivity(intent);
-                /*TasksFragment fragment2 = new TasksFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.home_fragment, fragment2);
-                fragmentTransaction.commit();*/
-
+                }
+            });
+            extendedFabNote.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    System.out.println("here");
+                    Toast toast = Toast.makeText(v.getContext(),
+                            "Adding new Note",
+                            Toast.LENGTH_SHORT);
+                    toast.show();
+                   Intent intent2 = new Intent(getActivity(), NoteActivity.class);
+                    startActivity(intent2);
                 }
             });
         //quote
@@ -98,6 +97,14 @@ public class HomeFragment extends Fragment{
 
         refreshQuoteButton = (Button) root.findViewById(R.id.refreshQuoteButton);
         redirectButtonTasks = (Button) root.findViewById(R.id.redirectButtonTasks);
+
+        refreshQuoteButton.post(new Runnable(){
+            @Override
+            public void run() {
+                refreshQuoteButton.performClick();
+            }
+        });
+
 
         refreshQuoteButton.post(new Runnable(){
             @Override
