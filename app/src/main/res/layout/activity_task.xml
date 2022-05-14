@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,91 +35,78 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
-            style="?attr/textInputOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/task_name"
-            app:counterEnabled="true"
-            app:counterMaxLength="50"
-            android:maxLines="1"
-            app:endIconContentDescription="Clear Content"
-            app:endIconMode="clear_text"
-            app:helperText="Input your text"
-            app:layout_constraintTop_toBottomOf="@+id/task_app_bar"
-            tools:ignore="MissingConstraints">
-
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textField"
+                style="?attr/textInputOutlinedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/detailsField"
-            style="?attr/textInputOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/task_details"
-            app:counterEnabled="true"
-            app:counterMaxLength="9999"
-            app:endIconContentDescription="Clear Content"
-            app:endIconMode="clear_text"
-            app:helperText="Input text"
-            app:layout_constraintTop_toBottomOf="@+id/textField"
-            tools:ignore="MissingConstraints">
-
+                android:layout_height="wrap_content"
+                android:hint="@string/task_name"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                android:maxLines="1"
+                app:endIconContentDescription="Clear Content"
+                app:endIconMode="clear_text"
+                app:helperText="Input your text"
+                tools:ignore="MissingConstraints">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputEditText"
+                    android:id="@+id/task_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/detailsField"
+                style="?attr/textInputOutlinedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:hint="@string/task_details"
+                app:counterEnabled="true"
+                app:counterMaxLength="9999"
+                app:endIconContentDescription="Clear Content"
+                app:endIconMode="clear_text"
+                app:helperText="Input text"
+                tools:ignore="MissingConstraints">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/date_picker"
-            style="?attr/textInputOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/due_date"
-            app:endIconMode="clear_text"
-            app:helperText="Choose your date"
-            app:layout_constraintTop_toBottomOf="@+id/detailsField"
-            android:orientation="vertical"
-            tools:ignore="MissingConstraints">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/task_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <DatePicker
-                android:id="@+id/simpleDatePicker"
+
+                <DatePicker
+                    android:id="@+id/date_picker_calendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:calendarViewShown="true"
+                    android:spinnersShown="true" />
+
+                <DatePicker
+                    android:id="@+id/date_picker_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:calendarViewShown="false"
+                    android:spinnersShown="true"
+                    android:datePickerMode="spinner"/>
+
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="5.0"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/filledButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:datePickerMode="spinner"/>
-            <DatePicker
-                android:id="@+id/calendar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:datePickerMode="calendar"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/slider"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:stepSize="5.0"
-                android:valueFrom="0.0"
-                android:valueTo="100.0"
-                app:layout_constraintTop_toBottomOf="@+id/date_picker"
+                android:text="Save"
                 tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/filledButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Filled button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/slider"
-            tools:ignore="MissingConstraints" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
