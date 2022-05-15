@@ -12,17 +12,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
+import com.example.diarynotesapp.TasksUI.Task;
+import com.example.diarynotesapp.TasksUI.TasksAdapter;
 import com.example.diarynotesapp.api.model.Quote;
 import com.example.diarynotesapp.api.rest.QuotesRestRepository;
 import com.example.diarynotesapp.databinding.FragmentHomeBinding;
 import com.example.diarynotesapp.ui.NoteActivity;
 import com.example.diarynotesapp.ui.TaskActivity;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class HomeFragment extends Fragment{
@@ -37,18 +44,24 @@ public class HomeFragment extends Fragment{
     private Button redirectButtonTasks;
     private ExtendedFloatingActionButton extendedFabTask;
     private ExtendedFloatingActionButton extendedFabNote;
+    private HomeViewModel homeViewModel;
+    private TasksAdapter adapter;
+    private RecyclerView tasksView;
+    private MaterialCardView card;
+    private List<Task> tasks = new ArrayList<>();
     //private OnClickListener onClickListener = new OnClickListener() {
 
 
 
-        public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
+        homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        card = (MaterialCardView) root.findViewById(R.id.card);
         extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
 
         extendedFabNote = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_note);
@@ -65,6 +78,10 @@ public class HomeFragment extends Fragment{
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
+        tasksView = root.findViewById(R.id.tasks_list);
+
+        setUpRecyclerView();
+        fetchItems();
 
         //FAB
             extendedFabTask.setOnClickListener(new View.OnClickListener(){
@@ -159,14 +176,30 @@ public class HomeFragment extends Fragment{
 
             }
         });
+
+
         return root;
     }
+
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        tasks.clear();
         binding = null;
     }
-
+    private void fetchItems() {
+        homeViewModel.getTasksMutable(getContext()).observe(getViewLifecycleOwner(),
+                this::updateTasksList);
+    }
+    private void setUpRecyclerView() {
+        adapter = new TasksAdapter(tasks);
+        tasksView.setAdapter(adapter);
+        tasksView.setLayoutManager(new LinearLayoutManager(tasksView.getContext()));
+    }
+    private void updateTasksList(List<Task> newTasks) {
+        tasks.addAll(newTasks);
+        adapter.notifyDataSetChanged();
+    }
 }

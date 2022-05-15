@@ -29,6 +29,7 @@ public class TaskActivity extends AppCompatActivity {
     EditText taskDetails;
     String sliderValue ="0.0";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

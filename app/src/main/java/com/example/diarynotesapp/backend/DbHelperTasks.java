@@ -64,7 +64,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         return id;
     }
 
-    public ArrayList<Task> getTask() {
+    public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String[] projection = {
