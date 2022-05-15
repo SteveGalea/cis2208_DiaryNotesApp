@@ -11,7 +11,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="50dp">
     <!-- card from material broken,  I would like to not show image of card, but an icon in my Imageview-->
     <!-- Title, secondary and supporting text -->
 

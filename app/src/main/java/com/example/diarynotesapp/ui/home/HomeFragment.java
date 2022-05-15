@@ -62,6 +62,14 @@ public class HomeFragment extends Fragment{
         View root = binding.getRoot();
 
         card = (MaterialCardView) root.findViewById(R.id.card);
+
+/*
+        card.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                //cardView.setChecked(!cardView.isChecked());
+                card.toggle();
+            }
+        });*/
         extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
 
         extendedFabNote = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_note);
@@ -202,4 +210,5 @@ public class HomeFragment extends Fragment{
         tasks.addAll(newTasks);
         adapter.notifyDataSetChanged();
     }
+
 }

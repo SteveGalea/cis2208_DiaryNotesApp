@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.TasksUI.Task;
@@ -19,6 +20,8 @@ import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.ui.tasks.TasksFragment;
 import com.example.diarynotesapp.ui.tasks.TasksViewModel;
 import com.google.android.material.slider.Slider;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class TaskActivity extends AppCompatActivity {
 
@@ -79,14 +82,20 @@ public class TaskActivity extends AppCompatActivity {
         String dateValue = getDate(simpleDatePicker);
         String taskNameValue = taskName.getText().toString();
         String taskDetailsValue = taskDetails.getText().toString();
+        if(taskNameValue.length() <= 0){
+            System.out.println("in save if condition");
 
-        Task task = new Task(-1, taskNameValue, taskDetailsValue, sliderValue, dateValue);
+            //textFieldHelper.setHelperText("Enter a Task Name Please!");
+        }else{
+            System.out.println("in save else condition");
+            Task task = new Task(-1, taskNameValue, taskDetailsValue, sliderValue, dateValue);
 
-        long id = dbHelperTasks.insertTask(task);
+            long id = dbHelperTasks.insertTask(task);
 
-        Intent intent = new Intent(this, ConfirmTaskActivity.class);
-        intent.putExtra("ID",id);
-        startActivity(intent);
+            Intent intent = new Intent(this, ConfirmTaskActivity.class);
+            intent.putExtra("ID",id);
+            startActivity(intent);
+        }
     }
     private String getDate(DatePicker simpleDatePicker){
         String delimeter = "/";

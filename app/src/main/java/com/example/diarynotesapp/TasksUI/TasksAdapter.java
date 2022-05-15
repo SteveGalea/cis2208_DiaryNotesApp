@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -40,13 +41,14 @@ public class TasksAdapter extends
         TextView dueDateTextView = holder.dueDateTextView;
         TextView progressTextView = holder.progressTextView;
 
-        titleTextView.setText(item.getName());
-        detailsTextView.setText(item.getDetails());
-        dueDateTextView.setText(item.getDateDue());
-        progressTextView.setText(item.getProgress());
+        titleTextView.setText("Task:"+item.getName());
+        detailsTextView.setText("Task Details:"+item.getDetails());
+        dueDateTextView.setText("Due on: "+item.getDateDue());
+        progressTextView.setText("Finished: "+item.getProgress()+"%");
     }
     @Override
     public int getItemCount() {
+
         return items.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -67,20 +69,18 @@ public class TasksAdapter extends
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemOnClick();
+                    itemOnClick(v);
                 }
             });
         }
-        public void itemOnClick() {
-            /*if(secondaryTextView.getText().equals("Unread")){
-                secondaryTextView.setText("Read");
-
-                iconImageView.setImageResource(R.drawable.ic_notifications_black_24dp);
-            } else {
-                secondaryTextView.setText("Unread");
-
-                iconImageView.setImageResource(R.drawable.ic_notifications_purple_24dp);
-            }*/
+        public void itemOnClick(View v) {
+            final MaterialCardView cardView = v.findViewById(R.id.card);
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                    cardView.setChecked(!cardView.isChecked());
+                    //cardView.toggle();
+                }
+            });
         }
     }
 }
