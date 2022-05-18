@@ -26,6 +26,7 @@ public class TasksFragment extends Fragment {
 
         final TextView textView = binding.textTasks;
         tasksViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 

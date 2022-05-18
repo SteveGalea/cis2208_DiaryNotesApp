@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,7 @@ import com.example.diarynotesapp.api.rest.QuotesRestRepository;
 import com.example.diarynotesapp.databinding.FragmentHomeBinding;
 import com.example.diarynotesapp.ui.NoteActivity;
 import com.example.diarynotesapp.ui.TaskActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -42,12 +44,15 @@ public class HomeFragment extends Fragment{
     private String date;
     private Button refreshQuoteButton;
     private Button redirectButtonTasks;
+    private Button redirectButtonNotes;
     private ExtendedFloatingActionButton extendedFabTask;
     private ExtendedFloatingActionButton extendedFabNote;
     private HomeViewModel homeViewModel;
     private TasksAdapter adapter;
     private RecyclerView tasksView;
     private MaterialCardView card;
+    private int currentTasks;
+    private int totalTasks;
     private List<Task> tasks = new ArrayList<>();
     //private OnClickListener onClickListener = new OnClickListener() {
 
@@ -61,15 +66,6 @@ public class HomeFragment extends Fragment{
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        card = (MaterialCardView) root.findViewById(R.id.card);
-
-/*
-        card.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                //cardView.setChecked(!cardView.isChecked());
-                card.toggle();
-            }
-        });*/
         extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
 
         extendedFabNote = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_note);
@@ -82,7 +78,6 @@ public class HomeFragment extends Fragment{
         date = dateFormat.format(calendar.getTime());
         dateTimeDisplay.setText(date);
 
-        //final TextView textView = binding.textHome;
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -90,7 +85,11 @@ public class HomeFragment extends Fragment{
 
         setUpRecyclerView();
         fetchItems();
+        fetchItems();
 
+        TextView taskCount = root.findViewById(R.id.task_total);
+
+        taskCount.setText("("+currentTasks+" visible/"+totalTasks+" total)");
         //FAB
             extendedFabTask.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -102,6 +101,7 @@ public class HomeFragment extends Fragment{
                     toast.show();
                     Intent intent = new Intent(getActivity(), TaskActivity.class);
                     startActivity(intent);
+                    fetchItems();
                 }
             });
             extendedFabNote.setOnClickListener(new View.OnClickListener(){
@@ -122,6 +122,7 @@ public class HomeFragment extends Fragment{
 
         refreshQuoteButton = (Button) root.findViewById(R.id.refreshQuoteButton);
         redirectButtonTasks = (Button) root.findViewById(R.id.redirectButtonTasks);
+        redirectButtonNotes = (Button) root.findViewById(R.id.redirectButtonNotes);
 
         refreshQuoteButton.post(new Runnable(){
             @Override
@@ -176,11 +177,28 @@ public class HomeFragment extends Fragment{
                         "Going to tasks",
                         Toast.LENGTH_SHORT);
                 toast.show();
-                /*TasksFragment fragment2 = new TasksFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.home_fragment, fragment2);
-                fragmentTransaction.commit();*/
+                //Navigation.findNavController(v).navigate(R.id.action_navigation_home_to_navigation_tasks);
+                BottomNavigationView bottomNavigationView;
+                bottomNavigationView = (BottomNavigationView) getActivity().findViewById(R.id.nav_view);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_tasks);
+                fetchItems();
+            }
+        });
+        redirectButtonNotes.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println("here");
+                Toast toast = Toast.makeText(v.getContext(),
+                        "Going to notes",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+
+                // bottom navigation click
+
+                BottomNavigationView bottomNavigationView;
+                bottomNavigationView = (BottomNavigationView) getActivity().findViewById(R.id.nav_view);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_notes);
+
 
             }
         });
@@ -194,7 +212,7 @@ public class HomeFragment extends Fragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        tasks.clear();
+        //tasks.clear();
         binding = null;
     }
     private void fetchItems() {
@@ -202,12 +220,20 @@ public class HomeFragment extends Fragment{
                 this::updateTasksList);
     }
     private void setUpRecyclerView() {
+        //adapter = new TasksAdapter(tasks,5);
         adapter = new TasksAdapter(tasks);
+        totalTasks= adapter.getItemCount();
+        adapter.setNum(3);
+        currentTasks = adapter.getItemCount();
         tasksView.setAdapter(adapter);
         tasksView.setLayoutManager(new LinearLayoutManager(tasksView.getContext()));
     }
     private void updateTasksList(List<Task> newTasks) {
+        tasks.clear();
         tasks.addAll(newTasks);
+        totalTasks= adapter.getItemCount();
+        TasksAdapter temp = new TasksAdapter(tasks);
+        currentTasks = temp.getItemCount();
         adapter.notifyDataSetChanged();
     }
 

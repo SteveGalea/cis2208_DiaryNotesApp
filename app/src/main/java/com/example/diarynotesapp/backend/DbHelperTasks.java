@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 
 import com.example.diarynotesapp.TasksUI.Task;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DbHelperTasks extends SQLiteOpenHelper {
@@ -16,6 +17,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "appDb.db";
 
+    private final String _id = TaskDb.TaskEntry.COLUMN_NAME_ID;
     private final String _name = TaskDb.TaskEntry.COLUMN_NAME_NAME;
     private final String _details = TaskDb.TaskEntry.COLUMN_NAME_DETAILS;
     private final String _dueDate = TaskDb.TaskEntry.COLUMN_NAME_DUEDATE;
@@ -109,9 +111,10 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         };
         // Filter results WHERE "id" = condition
         String selection = BaseColumns._ID + " = ?";
-        String[] selectionArgs = {Long.toString(id)};
+        System.out.println("id: "+id);
+        String[] selectionArgs = {id+""};
         // How you want the results sorted in the resulting Cursor
-        String sortOrder = _dueDate + " ASC";
+        String sortOrder = BaseColumns._ID;
         Cursor cursor = db.query(
                 TaskDb.TaskEntry.TABLE_NAME, // The table to query
                 projection, // The array of columns to return(pass null to get all)
@@ -120,17 +123,41 @@ public class DbHelperTasks extends SQLiteOpenHelper {
                 null, // don't group the rows
                 null, // don't filter by row groups
                 sortOrder // The sort order
- );
+         );
         Task task = null;
         while (cursor.moveToNext()) {
-            String name = cursor.getString(cursor.getColumnIndexOrThrow(_name));
-            String details = cursor.getString(cursor.getColumnIndexOrThrow(_details));
-            String dueDate = cursor.getString(cursor.getColumnIndexOrThrow(_dueDate));
-            String progress = cursor.getString(cursor.getColumnIndexOrThrow(_progress));
-            task = new Task(id, name, details, progress, dueDate);
+
+            long cid = cursor.getLong(cursor.getColumnIndexOrThrow(_id));
+            System.out.println("Checking: "+id);
+            if(cid == id) {
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(_name));
+                String details = cursor.getString(cursor.getColumnIndexOrThrow(_details));
+                String dueDate = cursor.getString(cursor.getColumnIndexOrThrow(_dueDate));
+                String progress = cursor.getString(cursor.getColumnIndexOrThrow(_progress));
+
+                task = new Task(id, name, details, progress, dueDate);
+                System.out.println("Got a task matching id"+id);
+            }
         }
         cursor.close();
         return task;
     }
 
+    public void removeTaskById(long id) {
+
+        // Filter results WHERE "id" = condition
+        String selection = BaseColumns._ID + " = ?";
+        System.out.println(BaseColumns._ID );
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+
+        System.out.println(selectionArgs[0]);
+        int deletedRows= deleteDataById(selectionArgs[0]);
+        System.out.println("deleted:"+deletedRows);
+    }
+    public int deleteDataById(String Id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int deletedRows = db.delete(TaskDb.TaskEntry.TABLE_NAME, "_id = ?", new String[] {Id});
+        db.close();
+        return deletedRows;
+    }
 }

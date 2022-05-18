@@ -8,6 +8,7 @@ public final class TaskDb {
         public TaskEntry() {}
         public static final String TABLE_NAME = "tasks";
         //public static final String _ID = "id";
+        public static final String COLUMN_NAME_ID ="_id";
         public static final String COLUMN_NAME_NAME = "_name";
         public static final String COLUMN_NAME_DETAILS = "_details";
         public static final String COLUMN_NAME_DUEDATE = "_dueDate";

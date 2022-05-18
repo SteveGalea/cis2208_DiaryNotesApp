@@ -29,7 +29,6 @@ public class HomeViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
-
     public LiveData<List<Task>> getTasksMutable(Context context) {
         DbHelperTasks dbHelper = new DbHelperTasks(context);
         ArrayList<Task> tasks= dbHelper.getTasks();
