@@ -2,6 +2,7 @@ package com.example.diarynotesapp.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.TasksUI.Task;
@@ -32,6 +34,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 public class HomeFragment extends Fragment{
@@ -74,18 +80,12 @@ public class HomeFragment extends Fragment{
         dateTimeDisplay = (TextView)root.findViewById(R.id.text_display_date);
         calendar = Calendar.getInstance();
         //set format
-        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        //dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         date = dateFormat.format(calendar.getTime());
         dateTimeDisplay.setText(date);
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        tasksView = root.findViewById(R.id.tasks_list);
-
-        setUpRecyclerView();
-        fetchItems();
-        fetchItems();
 
         TextView taskCount = root.findViewById(R.id.task_total);
 
@@ -99,9 +99,11 @@ public class HomeFragment extends Fragment{
                             "Adding new Task",
                             Toast.LENGTH_SHORT);
                     toast.show();
-                    Intent intent = new Intent(getActivity(), TaskActivity.class);
-                    startActivity(intent);
-                    fetchItems();
+                    Intent intent1 = new Intent(getActivity(), TaskActivity.class);
+                    intent1.putExtra("Activity", "Add");
+                    startActivity(intent1);
+                    essentialRecyclerView();
+                    //((Button)root.findViewById(R.id.navigation_home)).performClick();
                 }
             });
             extendedFabNote.setOnClickListener(new View.OnClickListener(){
@@ -181,7 +183,7 @@ public class HomeFragment extends Fragment{
                 BottomNavigationView bottomNavigationView;
                 bottomNavigationView = (BottomNavigationView) getActivity().findViewById(R.id.nav_view);
                 bottomNavigationView.setSelectedItemId(R.id.navigation_tasks);
-                fetchItems();
+
             }
         });
         redirectButtonNotes.setOnClickListener(new View.OnClickListener(){
@@ -203,7 +205,28 @@ public class HomeFragment extends Fragment{
             }
         });
 
+        final TextView textView = binding.textHome;
+        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
+        tasksView = root.findViewById(R.id.tasks_list);
+
+        essentialRecyclerView();
+
+
+        /*
+        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                taskCount.setText("("+currentTasks+" visible/"+totalTasks+" total)");
+
+                Toast.makeText(root.getContext(), "Refreshing", Toast.LENGTH_SHORT).show();
+                setUpRecyclerView();
+                fetchItems();
+                mSwipeRefreshLayout.setRefreshing(false);
+
+            }
+        });*/
         return root;
     }
 
@@ -214,6 +237,19 @@ public class HomeFragment extends Fragment{
         super.onDestroyView();
         //tasks.clear();
         binding = null;
+    }
+
+    private void essentialRecyclerView(){
+        setUpRecyclerView();
+        fetchItems();
+        /*ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
+        executor.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                essentialRecyclerView();
+                System.out.println("Ran now");
+            }
+        }, 0, 4, TimeUnit.SECONDS);*/
     }
     private void fetchItems() {
         homeViewModel.getTasksMutable(getContext()).observe(getViewLifecycleOwner(),

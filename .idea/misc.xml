@@ -4,9 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
-        <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/activity_task.xml" value="0.2" />
+        <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/activity_task.xml" value="0.264" />
         <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/activity_task_confirm.xml" value="0.1" />
-        <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/fragment_home.xml" value="0.12804878048780488" />
+        <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/fragment_tasks.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/layout/layout_tasks.xml" value="0.2" />
         <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2" />
         <entry key="..\:/Users/steve/DiaryNotesApp/app/src/main/res/menu/home_nav_graph.xml" value="0.1" />
@@ -15,5 +16,5 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

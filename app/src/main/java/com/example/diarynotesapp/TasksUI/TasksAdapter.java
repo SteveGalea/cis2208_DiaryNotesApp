@@ -1,9 +1,10 @@
 package com.example.diarynotesapp.TasksUI;
 
-import static java.lang.Boolean.valueOf;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.diarynotesapp.MainActivity;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.backend.DbHelperTasks;
+import com.example.diarynotesapp.ui.TaskActivity;
 import com.google.android.material.card.MaterialCardView;
 
 import org.w3c.dom.Text;
@@ -56,11 +59,23 @@ public class TasksAdapter extends
         TextView detailsTextView = holder.detailsTextView;
         TextView dueDateTextView = holder.dueDateTextView;
         TextView progressTextView = holder.progressTextView;
+        TextView taskIdTextView = holder.taskIdTextView;
 
         titleTextView.setText("Task: "+item.getName());
         detailsTextView.setText("Task Details: "+item.getDetails());
         dueDateTextView.setText("Due on: "+item.getDateDue());
         progressTextView.setText("Finished: "+item.getProgress()+"%");
+        taskIdTextView.setText(item.getId()+"");
+
+        double progress = Double.parseDouble(item.getProgress());
+        if(progress > 75.0) {
+            progressTextView.setTextColor(Color.GREEN);
+        }    else{
+            if(progress > 45.0) {
+                progressTextView.setTextColor(Color.MAGENTA);
+            }
+            else{ progressTextView.setTextColor(Color.RED);}
+        }
     }
     @Override
     public int getItemCount() {
@@ -78,6 +93,7 @@ public class TasksAdapter extends
         public TextView detailsTextView;
         public TextView dueDateTextView;
         public TextView progressTextView;
+        public TextView taskIdTextView;
         public Button doneBtn;
         public Button editBtn;
         public Button deleteBtn;
@@ -91,9 +107,13 @@ public class TasksAdapter extends
                     itemView.findViewById(R.id.due_date);
             progressTextView = (TextView)
                     itemView.findViewById(R.id.progress);
+            taskIdTextView = (TextView)
+                    itemView.findViewById(R.id.taskId);
             doneBtn = itemView.findViewById(R.id.doneBtn);
             editBtn = itemView.findViewById(R.id.editBtn);
             deleteBtn = itemView.findViewById(R.id.deleteBtn);
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,7 +131,11 @@ public class TasksAdapter extends
             editBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-
+                    int id = Integer.parseInt(taskIdTextView.getText().toString());
+                    Intent intent = new Intent(v.getContext(), TaskActivity.class);
+                    intent.putExtra("ID",id);
+                    intent.putExtra("Activity", "Edit");
+                    v.getContext().startActivity(intent);
                 }
             });
             deleteBtn.setOnClickListener(new View.OnClickListener(){
@@ -130,15 +154,7 @@ public class TasksAdapter extends
         }
         @SuppressLint("ResourceAsColor")
         public void itemOnClick(View v) {
-            final MaterialCardView cardView = v.findViewById(R.id.card);
-            String[] progressExtraction = progressTextView.getText().toString().split(" ", 2);
-            String[] progressExtraction2 = progressExtraction[1].split("%", 2);
-            double progress = Double.parseDouble(progressExtraction2[0]);
-            if(progress > 75) {
-                cardView.setCardBackgroundColor(R.color.md_theme_light_error);
-            }    else if(progress > 45) {
-                cardView.setCardBackgroundColor(R.color.md_theme_dark_error);
-            }      else cardView.setCardBackgroundColor(R.color.md_theme_light_primary);
+
             /*final MaterialCardView cardView = v.findViewById(R.id.card);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {

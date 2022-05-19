@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.TasksUI.Task;
@@ -58,7 +59,8 @@ public class TaskActivity extends AppCompatActivity {
     private TextView sliderShowProgressText;
 
 
-   // TextInputLayout tilTaskName, tilSlider, tilDate, tilTaskDetails;
+
+    // TextInputLayout tilTaskName, tilSlider, tilDate, tilTaskDetails;
 
 
     @Override
@@ -66,10 +68,15 @@ public class TaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+
+
         saveButton = (Button) findViewById(R.id.filledButton);
 
         taskName = (EditText) findViewById(R.id.task_name);
         taskDetails = (EditText) findViewById(R.id.task_details);
+
+
+
         //dateDue = (EditText) findViewById(R.id.editDueDate);
 /*
         tilTaskName = findViewById(R.id.textField);
@@ -91,6 +98,7 @@ public class TaskActivity extends AppCompatActivity {
 */
         slider = (Slider) findViewById(R.id.slider);
 
+
         topAppBar = findViewById(R.id.topAppBar);
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +115,20 @@ public class TaskActivity extends AppCompatActivity {
         mShowSelectedDateText = findViewById(R.id.show_selected_date);
         sliderShowProgressText = findViewById(R.id.show_progress_percentage);
 
+        if(getIntent().getStringExtra("Activity").equals("Edit")){
+            int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
+            if(userId != -2){
+
+                DbHelperTasks db = new DbHelperTasks(this);
+                Task item = db.getTaskById(userId);
+                taskName.setText(item.getName());
+                taskDetails.setText(item.getDetails());
+                taskDetails.setText(item.getDetails());
+                mShowSelectedDateText.setText(item.getDateDue());
+                sliderShowProgressText.setText(item.getProgress());
+                slider.setValue(Float.parseFloat(item.getProgress()));
+            }
+        }
         // now create instance of the material date picker
         // builder make sure to add the "datePicker" which
         // is normal material date picker which is the first
@@ -213,14 +235,21 @@ public class TaskActivity extends AppCompatActivity {
         }
         return true;
     }*/
-    private void onClickSave(View view){
+    private void onClickSave(View view) {
 
         //String dateValue = getDate(simpleDatePicker);
         String taskNameValue = taskName.getText().toString();
         String taskDetailsValue = taskDetails.getText().toString();
 
-       // if(isValid()){
-            Task task = new Task(-1, taskNameValue, taskDetailsValue, sliderValue, mShowSelectedDateText.getText().toString());
+        // if(isValid()){
+        if (getIntent().getStringExtra("Activity").equals("Add"))
+        {
+            Task task = new Task(
+                    -1,
+                    taskNameValue,
+                    taskDetailsValue,
+                    sliderValue,
+                    mShowSelectedDateText.getText().toString());
             DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
 
             long id = dbHelperTasks.insertTask(task);
@@ -228,12 +257,31 @@ public class TaskActivity extends AppCompatActivity {
             //Intent intent = new Intent(this, ConfirmTaskActivity.class);
             //intent.putExtra("ID",id);
             //startActivity(intent);
-            finish();
+        }
+        else{
+            // editing
+            int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
+
+            if(userId != -2){
+                Task task = new Task(
+                        userId,
+                        taskNameValue,
+                        taskDetailsValue,
+                        sliderValue,
+                        mShowSelectedDateText.getText().toString());
+                DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
+                dbHelperTasks.updateTaskById(task);
+            }else{
+
+            }
+        }
         //}else{
          //   Toast.makeText(this, "error somewhere", Toast.LENGTH_SHORT).show();
         //    finish();
        // }
         //}
+
+        finish();
     }
     /*
     private String getDate(MaterialDatePicker simpleDatePicker){

@@ -17,6 +17,7 @@ public class ConfirmTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_confirm);
         populateScreen();
+        //onBackPressed();
     }
     private void populateScreen() {
         DbHelperTasks dbHelper = new DbHelperTasks(this);
@@ -36,7 +37,7 @@ public class ConfirmTaskActivity extends AppCompatActivity {
         dateConfirm.setText(task.getDateDue());
         TextView sliderConfirm = (TextView)
                 findViewById(R.id.slider_confirm);
-        dateConfirm.setText(task.getProgress());
+        sliderConfirm.setText(task.getProgress());
     }
 
 }

@@ -65,6 +65,17 @@ public class DbHelperTasks extends SQLiteOpenHelper {
                 values);
         return id;
     }
+    public void updateTaskById(Task task) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(_name, task.getName());
+        values.put(_details, task.getDetails());
+        values.put(_dueDate, task.getDateDue());
+        values.put(_progress, task.getProgress());
+        db.update(TaskDb.TaskEntry.TABLE_NAME,  values, "_id =?", new String[]{String.valueOf(task.getId())});
+
+    }
+
 
     public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<>();

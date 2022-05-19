@@ -6,89 +6,98 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginLeft="20dp">
-    <!-- card from material broken,  I would like to not show image of card, but an icon in my Imageview-->
-    <!-- Title, secondary and supporting text -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical">
+        <!-- card from material broken,  I would like to not show image of card, but an icon in my Imageview-->
+        <!-- Title, secondary and supporting text -->
 
         <TextView
-            android:paddingTop="20dp"
-            android:textSize="25dp"
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="20dp"
             android:text="@string/title_tasks"
             android:textAppearance="?attr/textAppearanceTitleMedium"
-            />
+            android:textSize="25dp" />
+
         <TextView
             android:id="@+id/details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             android:paddingLeft="50sp"
+            android:paddingTop="10dp"
             android:text="@string/task_details"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?android:attr/textColorSecondary"
-            />
+            android:textColor="?android:attr/textColorSecondary" />
+
         <TextView
             android:id="@+id/due_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             android:paddingLeft="50sp"
+            android:paddingTop="10dp"
             android:text="@string/due_date"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?android:attr/textColorSecondary"
-            />
+            android:textColor="?android:attr/textColorSecondary" />
+
         <TextView
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             android:paddingLeft="50sp"
+            android:paddingTop="10dp"
             android:text="@string/progress"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?android:attr/textColorSecondary"
-            />
+            android:textColor="?android:attr/textColorSecondary" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp">
-        <com.google.android.material.button.MaterialButton
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:id="@+id/doneBtn"
-            app:icon="@drawable/ic_baseline_check_24"
-            android:text="Done"
-            style="?attr/borderlessButtonStyle"
-            />
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/doneBtn"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="Done"
+                app:icon="@drawable/ic_baseline_check_24" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editBtn"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="Edit"
+                app:icon="@drawable/ic_baseline_edit_24" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteBtn"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="Delete"
+                app:icon="@drawable/ic_delete_black_24dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/taskId"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:id="@+id/editBtn"
-            app:icon="@drawable/ic_baseline_edit_24"
-            android:text="Edit"
-            style="?attr/borderlessButtonStyle"
-            />
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:id="@+id/deleteBtn"
-            app:icon="@drawable/ic_delete_black_24dp"
-            android:text="Delete"
-            style="?attr/borderlessButtonStyle"
-        />
+            android:cursorVisible="false"
+            android:inputType="number"
+            android:text="TextView"
+            android:visibility="invisible" />
+
     </LinearLayout>
 
-</LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -28,7 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:paddingTop="?attr/actionBarSize"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -48,13 +47,20 @@
                 app:endIconMode="clear_text"
                 app:helperText="Input text"
                 app:errorEnabled="true"
-                tools:ignore="MissingConstraints">
+                tools:ignore="MissingConstraints"
+
+                android:padding="20dp">
             <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/task_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/detailsField"
@@ -64,6 +70,7 @@
                 android:hint="@string/task_details"
                 app:counterEnabled="true"
 
+                android:padding="20dp"
                 app:counterMaxLength="9"
                 app:endIconContentDescription="Clear Content"
                 app:endIconMode="clear_text"
@@ -87,6 +94,10 @@
                     android:spinnersShown="true"
                     android:datePickerMode="spinner"/>
 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateField"
@@ -94,6 +105,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Due Date"
+
+                android:padding="20dp"
                 app:helperText="Click the button"
                 app:errorEnabled="true"
                 tools:ignore="MissingConstraints">
@@ -102,6 +115,10 @@
                     android:id="@+id/show_selected_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:layout_gravity="center" />
 
                 <!--button to open the material design date picker dialog-->
@@ -116,6 +133,12 @@
             </com.google.android.material.textfield.TextInputLayout>
             <!--simple text view to show the selected date by the user-->
 
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sliderArea"
                 style="?attr/textInputOutlinedStyle"
@@ -124,12 +147,17 @@
                 android:contentDescription="Slider"
                 app:helperText="Slide slider"
                 app:errorEnabled="true"
+                android:padding="20dp"
                 tools:ignore="MissingConstraints">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/show_progress_percentage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="Progress" />
                 <com.google.android.material.slider.Slider
                         android:id="@+id/slider"
@@ -141,10 +169,16 @@
                         tools:ignore="MissingConstraints" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000"/>
+
             <Button
                 android:id="@+id/filledButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Save"
                 tools:ignore="MissingConstraints" />
         </LinearLayout>
