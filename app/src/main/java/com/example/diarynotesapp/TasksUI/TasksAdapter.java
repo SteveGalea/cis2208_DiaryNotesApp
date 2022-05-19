@@ -1,5 +1,8 @@
 package com.example.diarynotesapp.TasksUI;
 
+import static java.lang.Boolean.valueOf;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.google.android.material.card.MaterialCardView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -93,8 +98,9 @@ public class TasksAdapter extends
                 @Override
                 public void onClick(View v) {
 
-                    //itemOnClick(v);
+                    itemOnClick(v);
                 }
+
             });
             doneBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -122,8 +128,17 @@ public class TasksAdapter extends
                 }
             });
         }
+        @SuppressLint("ResourceAsColor")
         public void itemOnClick(View v) {
-
+            final MaterialCardView cardView = v.findViewById(R.id.card);
+            String[] progressExtraction = progressTextView.getText().toString().split(" ", 2);
+            String[] progressExtraction2 = progressExtraction[1].split("%", 2);
+            double progress = Double.parseDouble(progressExtraction2[0]);
+            if(progress > 75) {
+                cardView.setCardBackgroundColor(R.color.md_theme_light_error);
+            }    else if(progress > 45) {
+                cardView.setCardBackgroundColor(R.color.md_theme_dark_error);
+            }      else cardView.setCardBackgroundColor(R.color.md_theme_light_primary);
             /*final MaterialCardView cardView = v.findViewById(R.id.card);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {
