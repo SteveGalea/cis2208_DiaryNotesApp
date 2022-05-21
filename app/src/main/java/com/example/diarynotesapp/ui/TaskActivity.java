@@ -209,6 +209,10 @@ public class TaskActivity extends AppCompatActivity {
             tilTaskName.setError("Task Name Field can not be left empty!");
             return false;
         }
+        else if(value.length()>50){
+            tilTaskDetails.setError("Too many characters inputted! (Maximum 50 characters)");
+            return false;
+        }
         else{
             tilTaskName.setError(null);
             tilTaskName.setErrorEnabled(false);
@@ -219,7 +223,7 @@ public class TaskActivity extends AppCompatActivity {
     private boolean validateTaskDetails(){
         String value = tilTaskDetails.getEditText().getText().toString().trim();
         if(value.length()>500){
-            tilTaskDetails.setError("Too much details! (Maximum 500 characters)");
+            tilTaskDetails.setError("Too many characters inputted! (Maximum 500 characters)");
             return false;
         }
         else{

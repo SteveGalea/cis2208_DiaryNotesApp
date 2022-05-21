@@ -80,7 +80,11 @@ public class TasksAdapter extends
         TextView taskIdTextView = holder.taskIdTextView;
 
         String name = "Task: "+item.getName();
-        String details ="\tTask Details: "+item.getDetails();
+        String detailsTask = item.getDetails();
+        if(item.getDetails() == null||item.getDetails().equals("")){
+            detailsTask = "N/A";
+        }
+        String details ="\tTask Details: "+detailsTask;
         String date = "\tDue on: "+item.getDateDue();
         String progressSlider= "\tFinished: "+item.getProgress()+"%";
         String taskId = item.getId()+"";

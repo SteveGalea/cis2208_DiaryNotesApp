@@ -9,49 +9,55 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <!-- Media -->
+    <ImageView
+        android:id="@+id/image_id"
+        android:layout_width="match_parent"
+        android:layout_height="194dp"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        android:scaleType="centerCrop"
+        android:contentDescription="User upload"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:orientation="vertical">
         <!-- card from material broken,  I would like to not show image of card, but an icon in my Imageview-->
         <!-- Title, secondary and supporting text -->
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/noteTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
-            android:text="@string/title_tasks"
+            android:text="Notes"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textSize="25dp" />
 
-        <TextView
-            android:id="@+id/details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/task_details"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:drawableStart="@drawable/ic_baseline_assignment_24"
-            android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
-            android:id="@+id/due_date"
+            android:id="@+id/date_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:text="@string/due_date"
+            android:text="\tLast updated on:"
             style="@style/ThemeOverlay.Material3.TextInputEditText.FilledBox"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:drawableStart="@drawable/ic_baseline_edit_calendar_24"
             android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
-            android:id="@+id/progress"
+            android:id="@+id/notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:text="@string/progress"
+            android:text="\tNotes:\n"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:drawableStart="@drawable/ic_baseline_percent_24"
+            android:drawableStart="@drawable/ic_notes_black_24dp"
             android:textColor="?android:attr/textColorSecondary" />
 
         <LinearLayout
@@ -63,13 +69,13 @@
             android:paddingTop="10dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/doneBtn"
+                android:id="@+id/favouriteBtn"
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="Done"
-                app:icon="@drawable/ic_baseline_check_24" />
+                android:text="Favourite"
+                app:icon="@drawable/ic_baseline_favorite_24" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/editBtn"
@@ -91,7 +97,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/taskId"
+            android:id="@+id/noteId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:cursorVisible="false"
@@ -99,6 +105,7 @@
             android:text="TextView"
             android:visibility="invisible" />
 
+    </LinearLayout>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
