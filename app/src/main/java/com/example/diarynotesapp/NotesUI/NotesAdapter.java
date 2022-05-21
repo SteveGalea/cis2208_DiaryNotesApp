@@ -1,46 +1,31 @@
-package com.example.diarynotesapp.TasksUI;
+package com.example.diarynotesapp.NotesUI;
 
-
-
-
-import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.diarynotesapp.MainActivity;
 import com.example.diarynotesapp.R;
+import com.example.diarynotesapp.TasksUI.Task;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.ui.TaskActivity;
-import com.example.diarynotesapp.ui.home.HomeFragment;
-import com.google.android.material.card.MaterialCardView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class TasksAdapter extends
-        RecyclerView.Adapter<TasksAdapter.ViewHolder> {
+public class NotesAdapter extends
+        RecyclerView.Adapter<NotesAdapter.ViewHolder> {
     private List<Task> items;
     private int num = -1;
-    public TasksAdapter(List<Task> items) {
+    public NotesAdapter(List<Task> items) {
         this.items = items;
     }
     public void setNum(int num){
@@ -87,10 +72,8 @@ public class TasksAdapter extends
 
         if(item.getFlag().equals("Complete")){
             titleTextView.setText("Archived "+name);
-            holder.actionBtn.setText("Undo");
         }else{
             titleTextView.setText(name);
-            holder.actionBtn.setText("Archive");
         }
 
         detailsTextView.setText(details);
@@ -152,6 +135,7 @@ public class TasksAdapter extends
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     itemOnClick(v);
                 }
 
@@ -167,17 +151,17 @@ public class TasksAdapter extends
                     if(task.getFlag().equals("Pending")){
                         task.setFlag("Complete");
                         titleTextView.setText("Archived "+titleTextView.getText().toString());
-                        actionBtn.setText("Undo");
                     }else {
                         task.setFlag("Pending");
                         titleTextView.setText("Task: "+task.getName());
-                        actionBtn.setText("Archive");
                     }
                     dbHelperTasks.updateTaskById(task);
 
                 }
             });
             editBtn.setOnClickListener(new View.OnClickListener(){
+                // GetContent creates an ActivityResultLauncher<String> to allow you to pass
+// in the mime type you'd like to allow the user to select
                 @Override
                 public void onClick(View v) {
                     int id = Integer.parseInt(taskIdTextView.getText().toString());
@@ -185,6 +169,8 @@ public class TasksAdapter extends
                     intent.putExtra("ID", id);
                     intent.putExtra("Activity", "Edit");
                     v.getContext().startActivity(intent);
+                    //someActivityResultLauncher.launch(intent);
+                    //set edit details
 
                     notifyDataSetChanged();
                 }
@@ -213,15 +199,15 @@ public class TasksAdapter extends
 
         @SuppressLint("ResourceAsColor")
         public void itemOnClick(View v) {
-            int id = Integer.parseInt(taskIdTextView.getText().toString());
-            Intent intent = new Intent(v.getContext(), TaskActivity.class);
-            intent.putExtra("ID", id);
-            intent.putExtra("Activity", "Edit");
-            v.getContext().startActivity(intent);
-            //someActivityResultLauncher.launch(intent);
-            //set edit details
 
-            notifyDataSetChanged();
+            /*final MaterialCardView cardView = v.findViewById(R.id.card);
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                    cardView.setChecked(!cardView.isChecked());
+                    //cardView.toggle();
+                }
+            });*/
+
         }
     }
 }

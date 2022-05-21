@@ -22,6 +22,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
     private final String _details = TaskDb.TaskEntry.COLUMN_NAME_DETAILS;
     private final String _dueDate = TaskDb.TaskEntry.COLUMN_NAME_DUEDATE;
     private final String _progress = TaskDb.TaskEntry.COLUMN_NAME_PROGRESS;
+    private final String _flag = TaskDb.TaskEntry.COLUMN_NAME_FLAG;
 
     public DbHelperTasks(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -43,7 +44,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
     }
 
     private String createTables() {
-        return "CREATE TABLE "+ TaskDb.TaskEntry.TABLE_NAME+" ("+TaskDb.TaskEntry._ID+ " INTEGER PRIMARY KEY, " + _name + " varchar, "+_details + " varchar, "+_dueDate+ " varchar, "+ _progress + " varchar)";
+        return "CREATE TABLE "+ TaskDb.TaskEntry.TABLE_NAME+" ("+TaskDb.TaskEntry._ID+ " INTEGER PRIMARY KEY, " + _name + " varchar, "+_details + " varchar, "+_dueDate+ " varchar, "+ _progress + " varchar, "+ _flag + " varchar)";
     }
 
     private String dropTables() {
@@ -61,6 +62,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         values.put(_details, task.getDetails());
         values.put(_dueDate, task.getDateDue());
         values.put(_progress, task.getProgress());
+        values.put(_flag, task.getFlag());
         long id = db.insert(TaskDb.TaskEntry.TABLE_NAME, null,
                 values);
         return id;
@@ -72,6 +74,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         values.put(_details, task.getDetails());
         values.put(_dueDate, task.getDateDue());
         values.put(_progress, task.getProgress());
+        values.put(_flag, task.getFlag());
         db.update(TaskDb.TaskEntry.TABLE_NAME,  values, "_id =?", new String[]{String.valueOf(task.getId())});
 
     }
@@ -85,7 +88,8 @@ public class DbHelperTasks extends SQLiteOpenHelper {
                 _name,
                 _details,
                 _dueDate,
-                _progress
+                _progress,
+                _flag
         };
         // How you want the results sorted in the resulting Cursor
         String sortOrder = _dueDate + " ASC";
@@ -104,7 +108,8 @@ public class DbHelperTasks extends SQLiteOpenHelper {
             String details = cursor.getString(cursor.getColumnIndexOrThrow(_details));
             String dueDate = cursor.getString(cursor.getColumnIndexOrThrow(_dueDate));
             String progress = cursor.getString(cursor.getColumnIndexOrThrow(_progress));
-            Task task = new Task(id, name, details, progress, dueDate);
+            String flag = cursor.getString(cursor.getColumnIndexOrThrow(_flag));
+            Task task = new Task(id, name, details, progress, dueDate, flag);
             tasks.add(task);
         }
         cursor.close();
@@ -118,7 +123,8 @@ public class DbHelperTasks extends SQLiteOpenHelper {
                 _name,
                 _details,
                 _dueDate,
-                _progress
+                _progress,
+                _flag
         };
         // Filter results WHERE "id" = condition
         String selection = BaseColumns._ID + " = ?";
@@ -145,8 +151,9 @@ public class DbHelperTasks extends SQLiteOpenHelper {
                 String details = cursor.getString(cursor.getColumnIndexOrThrow(_details));
                 String dueDate = cursor.getString(cursor.getColumnIndexOrThrow(_dueDate));
                 String progress = cursor.getString(cursor.getColumnIndexOrThrow(_progress));
+                String flag = cursor.getString(cursor.getColumnIndexOrThrow(_flag));
 
-                task = new Task(id, name, details, progress, dueDate);
+                task = new Task(id, name, details, progress, dueDate, flag);
                 System.out.println("Got a task matching id"+id);
             }
         }

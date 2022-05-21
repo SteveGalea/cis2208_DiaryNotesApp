@@ -1,18 +1,22 @@
 package com.example.diarynotesapp.TasksUI;
 
-public class Task {
+import java.io.Serializable;
+
+public class Task implements Serializable {
     private long id;
     private String _name;
     private String _details;
     private String _progress;
     private String _dateDue;
+    private String _flag;
 
-    public Task(long id, String _name, String _details, String _progress, String _dateDue) {
+    public Task(long id, String _name, String _details, String _progress, String _dateDue, String _flag) {
         this.id = id;
         this._name = _name;
         this._details = _details;
         this._progress = _progress;
         this._dateDue = _dateDue;
+        this._flag = _flag;
     }
 
     //getters and setters
@@ -54,6 +58,14 @@ public class Task {
 
     public void setDateDue(String _dateDue) {
         this._dateDue = _dateDue;
+    }
+
+    public String getFlag() {
+        return _flag;
+    }
+
+    public void setFlag(String _flag) {
+        this._flag = _flag;
     }
 
 }

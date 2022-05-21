@@ -47,6 +47,7 @@
                 app:endIconMode="clear_text"
                 app:helperText="Input text"
                 app:errorEnabled="true"
+                app:startIconDrawable="@drawable/ic_baseline_edit_24"
                 tools:ignore="MissingConstraints"
 
                 android:padding="20dp">
@@ -71,11 +72,12 @@
                 app:counterEnabled="true"
 
                 android:padding="20dp"
-                app:counterMaxLength="9"
+                app:counterMaxLength="500"
                 app:endIconContentDescription="Clear Content"
                 app:endIconMode="clear_text"
                 app:helperText="Input text"
                 app:errorEnabled="true"
+                app:startIconDrawable="@drawable/ic_baseline_assignment_24"
                 tools:ignore="MissingConstraints">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -109,6 +111,7 @@
                 android:padding="20dp"
                 app:helperText="Click the button"
                 app:errorEnabled="true"
+                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24"
                 tools:ignore="MissingConstraints">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -121,18 +124,7 @@
                     android:focusableInTouchMode="false"
                     android:layout_gravity="center" />
 
-                <!--button to open the material design date picker dialog-->
-                <Button
-                    android:id="@+id/pick_date_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Select Date"
-                    android:textSize="18sp"
-                    app:icon="@drawable/ic_baseline_edit_calendar_24" />
             </com.google.android.material.textfield.TextInputLayout>
-            <!--simple text view to show the selected date by the user-->
-
 
             <View
                 android:layout_width="match_parent"
@@ -158,7 +150,9 @@
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:drawableStart="@drawable/ic_baseline_percent_24"
                     android:hint="Progress" />
+
                 <com.google.android.material.slider.Slider
                         android:id="@+id/slider"
                         android:layout_width="match_parent"
@@ -167,6 +161,7 @@
                         android:valueFrom="0.0"
                         android:valueTo="100.0"
                         tools:ignore="MissingConstraints" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <View
@@ -181,6 +176,9 @@
                 android:layout_gravity="center"
                 android:text="Save"
                 tools:ignore="MissingConstraints" />
+
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
+
 </LinearLayout>

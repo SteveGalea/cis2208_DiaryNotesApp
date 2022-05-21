@@ -1,43 +1,42 @@
 package com.example.diarynotesapp.ui;
 
-import static androidx.core.widget.TextViewKt.addTextChangedListener;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.Slide;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.core.util.Pair;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.TasksUI.Task;
+import com.example.diarynotesapp.TasksUI.TasksAdapter;
 import com.example.diarynotesapp.backend.DbHelperTasks;
-import com.example.diarynotesapp.ui.tasks.TasksFragment;
-import com.example.diarynotesapp.ui.tasks.TasksViewModel;
-import com.google.android.material.appbar.AppBarLayout;
+import com.example.diarynotesapp.ui.home.HomeFragment;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.slider.Slider;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -45,18 +44,21 @@ import java.util.TimeZone;
 public class TaskActivity extends AppCompatActivity {
 
     Button saveButton;
-    MaterialDatePicker simpleDatePicker;
+    //MaterialDatePicker simpleDatePicker;
     Slider slider;
     EditText taskName;
     EditText taskDetails;
-    String sliderValue ="0.0";
+    String sliderValue;
     MaterialToolbar topAppBar;
     String dateValue = "";
-    //EditText dateDue;
     private Button mPickDateButton;
 
     private TextView mShowSelectedDateText;
     private TextView sliderShowProgressText;
+
+    TextInputLayout tilTaskName, tilTaskDetails, tilDate, tilSlider;
+    //validation from https://www.youtube.com/watch?v=qcDlcITNqnE&ab_channel=CodingWithTea
+
 
 
 
@@ -68,72 +70,59 @@ public class TaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-
-
         saveButton = (Button) findViewById(R.id.filledButton);
-
         taskName = (EditText) findViewById(R.id.task_name);
         taskDetails = (EditText) findViewById(R.id.task_details);
+        slider = (Slider) findViewById(R.id.slider);
 
-
-
-        //dateDue = (EditText) findViewById(R.id.editDueDate);
-/*
         tilTaskName = findViewById(R.id.textField);
         tilTaskDetails = findViewById(R.id.detailsField);
         tilDate = findViewById(R.id.dateField);
         tilSlider = findViewById(R.id.sliderArea);
 
-            tilTaskName.onKeyDown(addTextChangedListener(new TextWatcher(){
-                @Override
-                public void afterTextChanged(Editable arg0) {
-                if(tilTaskName.getCounterMaxLength() == 0) {
-                    tilTaskName.setErrorEnabled(true);
-                    tilTaskName.setError("You need to enter a name");
-                }
-                isValid();
 
-            }
-        });
-*/
-        slider = (Slider) findViewById(R.id.slider);
+        topAppBar = (MaterialToolbar) findViewById(R.id.topAppBar);
+        setSupportActionBar(topAppBar);
 
 
-        topAppBar = findViewById(R.id.topAppBar);
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                //finish();
+                System.out.println("CLICKED BACK");
+                finish();
             }
         });
+
 
         //https://www.geeksforgeeks.org/material-design-date-picker-in-android///
 
         /// now register the text view and the button with
         // their appropriate IDs
-        mPickDateButton = findViewById(R.id.pick_date_button);
+        //mPickDateButton = findViewById(R.id.pick_date_button);
         mShowSelectedDateText = findViewById(R.id.show_selected_date);
         sliderShowProgressText = findViewById(R.id.show_progress_percentage);
 
-        if(getIntent().getStringExtra("Activity").equals("Edit")){
+        if (getIntent().getStringExtra("Activity").equals("Edit")) {
             int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
-            if(userId != -2){
+            if (userId != -2) {
 
                 DbHelperTasks db = new DbHelperTasks(this);
                 Task item = db.getTaskById(userId);
                 taskName.setText(item.getName());
                 taskDetails.setText(item.getDetails());
-                taskDetails.setText(item.getDetails());
                 mShowSelectedDateText.setText(item.getDateDue());
                 sliderShowProgressText.setText(item.getProgress());
-                slider.setValue(Float.parseFloat(item.getProgress()));
+                float progress;
+                if(item.getProgress() == null || item.getProgress().equals("")){
+                    progress = 0.0f;
+                }else{
+                    progress = Float.parseFloat(item.getProgress());
+                }
+                slider.setValue(progress);
             }
         }
-        // now create instance of the material date picker
-        // builder make sure to add the "datePicker" which
-        // is normal material date picker which is the first
-        // type of the date picker in material design date
-        // picker
+        //instantiate
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
 
         // now define the properties of the
@@ -146,7 +135,7 @@ public class TaskActivity extends AppCompatActivity {
 
         // handle select date button which opens the
         // material design date picker
-        mPickDateButton.setOnClickListener(
+        tilDate.getEditText().setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -172,131 +161,205 @@ public class TaskActivity extends AppCompatActivity {
                         // Create a date format, then a date object with our offset
                         SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                         Date date = new Date(selection + offsetFromUTC);
-                        //mShowSelectedDateText.setText(materialDatePicker.getHeaderText());
                         mShowSelectedDateText.setText(simpleFormat.format(date));
-                        // in the above statement, getHeaderText
-                        // is the selected date preview from the
-                        // dialog
                     }
                 });
+
         slider.addOnChangeListener(new Slider.OnChangeListener() {
             @SuppressLint("RestrictedApi")
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 //Use the value
-                sliderValue= ""+value+"";
+                sliderValue = "" + value + "";
                 sliderShowProgressText.setText(sliderValue);
+                validateSlider();
+
             }
         });
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickSave(v);
+                onClickSave();
             }
         });
-        //initiate needed data
-        /*slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: Slider) {
-                // Responds to when slider's touch event is being started
+
+        taskName.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
-            override fun onStopTrackingTouch(slider: Slider) {
-                // Responds to when slider's touch event is being stopped
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                validateTaskName();
             }
-        })
 
-        slider.addOnChangeListener { slider, value, fromUser ->
-            // Responds to when slider's value is changed
-        }*/
+            @Override
+            public void afterTextChanged(Editable editable) {
+                validateTaskName();
+            }
+        });
+    }
+    private boolean validateTaskName(){
+        String value = tilTaskName.getEditText().getText().toString().trim();
+        if(value.isEmpty()){
+            tilTaskName.setError("Task Name Field can not be left empty!");
+            return false;
+        }
+        else{
+            tilTaskName.setError(null);
+            tilTaskName.setErrorEnabled(false);
+            return true;
+        }
 
     }
-    /*
-    private boolean isValid(){
-        tilTaskName = findViewById(R.id.textField);
-        tilTaskDetails = findViewById(R.id.detailsField);
-        tilDate = findViewById(R.id.dateField);
-        tilSlider = findViewById(R.id.sliderArea);
+    private boolean validateTaskDetails(){
+        String value = tilTaskDetails.getEditText().getText().toString().trim();
+        if(value.length()>500){
+            tilTaskDetails.setError("Too much details! (Maximum 500 characters)");
+            return false;
+        }
+        else{
+            tilTaskDetails.setError(null);
+            tilTaskDetails.setErrorEnabled(false);
+            return true;
+        }
 
-        if (!tilTaskName.getError().equals("")) {
-            tilTaskName.setError(tilTaskName.getError());
+    }
+
+    private boolean validateDate(){
+        String value = tilDate.getEditText().getText().toString().trim();
+        if(value.isEmpty()){
+            tilDate.setError("Date Field can not be left empty!");
             return false;
         }
-        if (!tilTaskDetails.getError().equals("")) {
-            tilTaskDetails.setError(tilTaskDetails.getError());
+        else{
+            tilDate.setError(null);
+            tilDate.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+    private boolean validateSlider(){
+        String value = tilSlider.getEditText().getText().toString().trim();
+        if(value.isEmpty()){
+            tilSlider.setError("Progress Field can not be left empty!");
             return false;
         }
-        if (!tilDate.getError().equals("")) {
-            tilDate.setError(tilDate.getError());
-            return false;
+        else{
+            tilSlider.setError(null);
+            tilSlider.setErrorEnabled(false);
+            return true;
         }
-        if (!tilSlider.getError().equals("")) {
-            tilSlider.setError(tilSlider.getError());
-            return false;
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.task_top_app_bar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        DbHelperTasks db = new DbHelperTasks(this);
+        int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.remove:
+                Intent _result = new Intent();
+                Toast.makeText(this, "Removing from Database", Toast.LENGTH_SHORT)
+                        .show();
+                //Task t = getTaskId()
+                db.removeTaskById(userId);
+
+                _result.putExtra("Deleted Task", userId);
+
+
+                setResult(Activity.RESULT_OK, _result);
+                finish();
+                break;
+            case R.id.save:
+
+                Toast.makeText(this, "Attempting to save task", Toast.LENGTH_SHORT)
+                        .show();
+                this.onClickSave();
+
+                break;
+            default:
+                break;
         }
+
         return true;
-    }*/
-    private void onClickSave(View view) {
+    }
+    private void onClickSave() {
 
         //String dateValue = getDate(simpleDatePicker);
         String taskNameValue = taskName.getText().toString();
         String taskDetailsValue = taskDetails.getText().toString();
+        String sliderValue = sliderShowProgressText.getText().toString();
 
-        // if(isValid()){
+        Intent _result = new Intent();
+
+        if(!validateTaskName() | !validateTaskDetails() | !validateDate() | !validateSlider()){
+            return;
+        }
+
+        Task task;
         if (getIntent().getStringExtra("Activity").equals("Add"))
         {
-            Task task = new Task(
+            task = new Task(
                     -1,
                     taskNameValue,
                     taskDetailsValue,
                     sliderValue,
-                    mShowSelectedDateText.getText().toString());
+                    mShowSelectedDateText.getText().toString(),
+                    "Pending");
             DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
 
             long id = dbHelperTasks.insertTask(task);
 
-            //Intent intent = new Intent(this, ConfirmTaskActivity.class);
-            //intent.putExtra("ID",id);
-            //startActivity(intent);
+            _result.putExtra("Add Task", (Serializable) task);
+
         }
         else{
             // editing
             int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
 
             if(userId != -2){
-                Task task = new Task(
+                task = new Task(
                         userId,
                         taskNameValue,
                         taskDetailsValue,
                         sliderValue,
-                        mShowSelectedDateText.getText().toString());
+                        mShowSelectedDateText.getText().toString(),
+                        "Pending");
                 DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
                 dbHelperTasks.updateTaskById(task);
+
+                _result.putExtra("Edit Task", (Serializable) task);
             }else{
+                task = new Task(
+                        -1,
+                        taskNameValue,
+                        taskDetailsValue,
+                        sliderValue,
+                        mShowSelectedDateText.getText().toString(),
+                        "Pending");
+                DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
+
+                long id = dbHelperTasks.insertTask(task);
+                _result.putExtra("Add Task", (Serializable) task);
 
             }
         }
-        //}else{
-         //   Toast.makeText(this, "error somewhere", Toast.LENGTH_SHORT).show();
-        //    finish();
-       // }
-        //}
 
+        setResult(Activity.RESULT_OK, _result);
         finish();
+
     }
-    /*
-    private String getDate(MaterialDatePicker simpleDatePicker){
-        String delimeter = "/";
-        int day = simpleDatePicker.getDayOfMonth();
-        String dayDate = day+delimeter;
-        int month = simpleDatePicker.getMonth();
-        String monthDate = month+delimeter;
-        int year = simpleDatePicker.getYear();
-        if(day < 10){
-            dayDate = "0"+dayDate;
-        }
-        if(month < 10){
-            monthDate = "0"+monthDate;
-        }
-        return dayDate+monthDate+year;
-    }*/
 }

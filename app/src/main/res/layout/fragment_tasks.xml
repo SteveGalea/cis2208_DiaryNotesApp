@@ -7,6 +7,12 @@
     tools:context=".ui.tasks.TasksFragment"
     android:orientation="vertical">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +33,7 @@
 
 
     <TextView
-        android:id="@+id/task_total"
+        android:id="@+id/textTasks"
         android:text="@string/title_tasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,6 +43,13 @@
         android:layout_gravity="center"
         />
 
+        <TextView
+            android:id="@+id/task_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:layout_gravity="center"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tasks_list"
@@ -47,6 +60,8 @@
         />
 
     </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/extended_fab_task"

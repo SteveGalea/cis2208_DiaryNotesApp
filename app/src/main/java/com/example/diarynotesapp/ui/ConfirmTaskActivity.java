@@ -12,6 +12,7 @@ import com.example.diarynotesapp.backend.DbHelperTasks;
 
 public class ConfirmTaskActivity extends AppCompatActivity {
 
+    // TEST CLASS... THIS WAS DISCONTINUED AFTER SHOWING RECYCLERVIEW
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

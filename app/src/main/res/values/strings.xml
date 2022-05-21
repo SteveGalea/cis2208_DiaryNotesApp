@@ -24,4 +24,5 @@
     <string name="more">More</string>
     <string name="content_description_more">Get More Actions</string>
     <string name="note_title">Note Title</string>
+    <string name="error_too_few_characters">You need to input more characters!</string>
 </resources>

@@ -2,10 +2,11 @@ package com.example.diarynotesapp.NotesUI;
 
 import com.example.diarynotesapp.backend.NoteDb;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Note {
+public class Note implements Serializable {
     private long id;
     private String _title;
     private String _noteText;

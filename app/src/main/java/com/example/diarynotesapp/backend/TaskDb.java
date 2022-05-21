@@ -13,5 +13,6 @@ public final class TaskDb {
         public static final String COLUMN_NAME_DETAILS = "_details";
         public static final String COLUMN_NAME_DUEDATE = "_dueDate";
         public static final String COLUMN_NAME_PROGRESS = "_progress";
+        public static final String COLUMN_NAME_FLAG = "_flag";
     }
 }

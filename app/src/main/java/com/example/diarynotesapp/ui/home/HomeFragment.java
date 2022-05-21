@@ -1,6 +1,8 @@
 package com.example.diarynotesapp.ui.home;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -10,14 +12,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.diarynotesapp.MainActivity;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.TasksUI.Task;
 import com.example.diarynotesapp.TasksUI.TasksAdapter;
@@ -57,15 +66,30 @@ public class HomeFragment extends Fragment{
     private TasksAdapter adapter;
     private RecyclerView tasksView;
     private MaterialCardView card;
-    private int currentTasks;
-    private int totalTasks;
+
+
+    TextView taskCount;
     private List<Task> tasks = new ArrayList<>();
-    //private OnClickListener onClickListener = new OnClickListener() {
 
 
+    public ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    System.out.println(result.getResultCode());
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        //Intent data = result.getData();
+                        resetRecyclerView();
+                    }
+                }
+            });
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        tasks.clear();
+
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -86,10 +110,6 @@ public class HomeFragment extends Fragment{
         dateTimeDisplay.setText(date);
 
 
-
-        TextView taskCount = root.findViewById(R.id.task_total);
-
-        taskCount.setText("("+currentTasks+" visible/"+totalTasks+" total)");
         //FAB
             extendedFabTask.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -101,9 +121,11 @@ public class HomeFragment extends Fragment{
                     toast.show();
                     Intent intent1 = new Intent(getActivity(), TaskActivity.class);
                     intent1.putExtra("Activity", "Add");
-                    startActivity(intent1);
-                    essentialRecyclerView();
-                    //((Button)root.findViewById(R.id.navigation_home)).performClick();
+                    someActivityResultLauncher.launch(intent1);
+                    //adapter = new TasksAdapter(tasks);
+
+                    //onCreateView(inflater,container, savedInstanceState);
+
                 }
             });
             extendedFabNote.setOnClickListener(new View.OnClickListener(){
@@ -115,7 +137,7 @@ public class HomeFragment extends Fragment{
                             Toast.LENGTH_SHORT);
                     toast.show();
                    Intent intent2 = new Intent(getActivity(), NoteActivity.class);
-                    startActivity(intent2);
+                   startActivity(intent2);
                 }
             });
         //quote
@@ -210,27 +232,12 @@ public class HomeFragment extends Fragment{
 
         tasksView = root.findViewById(R.id.tasks_list);
 
-        essentialRecyclerView();
+        resetRecyclerView();
 
 
-        /*
-        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipeToRefresh);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                taskCount.setText("("+currentTasks+" visible/"+totalTasks+" total)");
 
-                Toast.makeText(root.getContext(), "Refreshing", Toast.LENGTH_SHORT).show();
-                setUpRecyclerView();
-                fetchItems();
-                mSwipeRefreshLayout.setRefreshing(false);
-
-            }
-        });*/
         return root;
     }
-
-
 
     @Override
     public void onDestroyView() {
@@ -239,38 +246,33 @@ public class HomeFragment extends Fragment{
         binding = null;
     }
 
-    private void essentialRecyclerView(){
-        setUpRecyclerView();
-        fetchItems();
-        /*ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
-        executor.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                essentialRecyclerView();
-                System.out.println("Ran now");
-            }
-        }, 0, 4, TimeUnit.SECONDS);*/
-    }
     private void fetchItems() {
         homeViewModel.getTasksMutable(getContext()).observe(getViewLifecycleOwner(),
                 this::updateTasksList);
     }
+
     private void setUpRecyclerView() {
         //adapter = new TasksAdapter(tasks,5);
         adapter = new TasksAdapter(tasks);
-        totalTasks= adapter.getItemCount();
         adapter.setNum(3);
-        currentTasks = adapter.getItemCount();
         tasksView.setAdapter(adapter);
         tasksView.setLayoutManager(new LinearLayoutManager(tasksView.getContext()));
     }
+
     private void updateTasksList(List<Task> newTasks) {
         tasks.clear();
         tasks.addAll(newTasks);
-        totalTasks= adapter.getItemCount();
-        TasksAdapter temp = new TasksAdapter(tasks);
-        currentTasks = temp.getItemCount();
         adapter.notifyDataSetChanged();
     }
+    public void resetRecyclerView(){
+        tasks.clear();
+        setUpRecyclerView();
+        fetchItems();
 
+    }
+
+    public void onResume() {
+        resetRecyclerView();
+        super.onResume();
+    }
 }
