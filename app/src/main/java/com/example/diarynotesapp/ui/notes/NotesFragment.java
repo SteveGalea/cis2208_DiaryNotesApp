@@ -29,6 +29,7 @@ import com.example.diarynotesapp.recyclerviewUI.NotesUI.NotesAdapter;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.databinding.FragmentNotesBinding;
 import com.example.diarynotesapp.ui.NoteActivity;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -43,7 +44,8 @@ public class NotesFragment extends Fragment {
     private NotesAdapter adapter;
     private RecyclerView notesView;
     private TextInputEditText searchTextInput;
-
+    private Chip favourites;
+    private boolean favFilter = false;
     private List<Note> notes = new ArrayList<>();
 
     public ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
@@ -89,6 +91,23 @@ public class NotesFragment extends Fragment {
         });
 
         notesView = root.findViewById(R.id.notes_list);
+        favourites = root.findViewById(R.id.favouriteChip);
+        favourites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(favFilter)
+                {
+                    handleChip(favFilter);
+                    favFilter = false;
+                }else{
+                    handleChip(favFilter);
+                    favFilter = true;
+                }
+
+
+            }
+
+        });
 
         resetRecyclerView();
 
@@ -124,12 +143,12 @@ public class NotesFragment extends Fragment {
                 // if the item is matched we are
                 // adding it to our filtered list.
                 filteredlist.add(item);
+                Toast.makeText(this.getContext(), "See the matching items!", Toast.LENGTH_SHORT).show();
             }
         }
         if (filteredlist.isEmpty()) {
             // if no item is added in filtered list we are
             // displaying a toast message as no data found.
-            Toast.makeText(this.getContext(), "No Data Found..", Toast.LENGTH_SHORT).show();
         } else {
             // at last we are passing that filtered
             // list to our adapter class.
@@ -137,6 +156,27 @@ public class NotesFragment extends Fragment {
         }
     }
 
+    private void handleChip(boolean value) {
+        // creating a new array list to filter our data.
+        ArrayList<Note> filteredlist = new ArrayList<>();
+
+        String compareElem = "";
+        if(value == true){
+            compareElem = "Favourites";
+        }
+        // running a for loop to compare elements.
+        for (Note item : notes) {
+            // checking if the entered string matched with any item of our recycler view.
+            if (item.getFavourite().toLowerCase().contains(compareElem.toLowerCase())) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                filteredlist.add(item);
+                Toast.makeText(this.getContext(), "Filtered by filter click!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        adapter.filterList(filteredlist);
+
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

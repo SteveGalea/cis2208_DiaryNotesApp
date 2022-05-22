@@ -47,63 +47,115 @@
             app:endIconContentDescription="Clear Content"
             app:endIconMode="clear_text"
             app:helperText="Input your text"
+            android:padding="20dp"
             app:layout_constraintTop_toBottomOf="@+id/notes_app_bar"
             tools:ignore="MissingConstraints">
 
           <com.google.android.material.textfield.TextInputEditText
               android:id="@+id/noteTitle"
+              android:drawableLeft="@drawable/ic_baseline_edit_24"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/lineBreak2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#000000"
+            />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/detailsField"
             style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Notes"
+            android:hint="\tNotes"
             app:counterEnabled="true"
             app:counterMaxLength="9999"
             app:endIconContentDescription="Clear Content"
             app:endIconMode="clear_text"
             app:helperText="Input text"
+            android:padding="20dp"
             app:layout_constraintTop_toBottomOf="@+id/textField"
             tools:ignore="MissingConstraints">
 
           <com.google.android.material.textfield.TextInputEditText
               android:id="@+id/notesText"
+              android:drawableLeft="@drawable/ic_baseline_assignment_24"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
-        <ImageView
-            android:id="@+id/notes_image"
+        <View
+            android:id="@+id/lineBreak3"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:layout_constraintTop_toBottomOf="@+id/detailsField"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            tools:ignore="MissingConstraints" />
-
+            android:layout_height="2dp"
+            android:background="#000000"
+            />
 
         <Button
             android:id="@+id/selectImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Image"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_baseline_image_24"
+            android:drawableTint="@color/design_default_color_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notes_image"
             tools:ignore="MissingConstraints" />
 
+        <ImageView
+            android:id="@+id/notes_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:padding="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/detailsField"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            tools:ignore="MissingConstraints" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/imageError"
+            style="?attr/textInputOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="Has an image been Inputted?"
+            android:padding="20dp"
+            app:helperText="Input your image"
+            tools:ignore="MissingConstraints">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:editable="false"
+            android:background="@color/material_dynamic_secondary60"
+            />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/lineBreak4"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#000000"
+            />
+
+
         <Button
             android:id="@+id/saveBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_baseline_check_24"
+            android:drawableTint="@color/design_default_color_background"
             android:text="Save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -8,8 +8,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.ui.NoteActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,15 +41,25 @@ public class NotesAdapter extends
     public void setNum(int num){
         this.num = num;
     }
-/*
-    public TasksAdapter(List<Task> items, int num) {
-        this.items = items;
-        this.num = num;
-    }*/
 
+    //essential methods
+    public String BitMapToString(Bitmap bitmap){
 
-
-    private void onEditCard(Task toBeEdited) {
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+    public Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
     }
 
     @NonNull
@@ -67,11 +80,11 @@ public class NotesAdapter extends
 
         Note item = items.get(position);
 
-        imageView = holder.imageView;
         TextView nameTextView = holder.nameTextView;
         TextView dateTextView = holder.dateTextView;
         TextView notesTextView = holder.notesTextView;
         TextView noteIdTextView = holder.noteIdTextView;
+        ImageView imageViewCard = holder.imageView;
 
         String name = "Note: "+item.getTitle();
         String date = "\tLast Update: "+item.getDate();
@@ -82,11 +95,12 @@ public class NotesAdapter extends
 
         Button favBtn = holder.favBtn;
         favBtn.setTextColor(R.color.md_theme_light_primary);
-        if(item.getFavourite().equals("Favourited")){
+        if(item.getFavourite().equals("Favourites")){
             favBtn.setTextColor(Color.RED);
         }
-
-
+        if(!imageUrl.equals("")) {
+            imageViewCard.setImageBitmap(StringToBitMap(imageUrl));
+        }
         nameTextView.setText(name);
         dateTextView.setText(date);
         notesTextView.setText(notes);
@@ -112,6 +126,7 @@ public class NotesAdapter extends
         notifyDataSetChanged();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public TextView notesTextView;
@@ -130,7 +145,7 @@ public class NotesAdapter extends
                     itemView.findViewById(R.id.date_update);
             notesTextView = (TextView)
                     itemView.findViewById(R.id.notes);
-            imageView = (ImageView) itemView.findViewById(R.id.image_field);
+            imageView = (ImageView) itemView.findViewById(R.id.note_img);
             noteIdTextView = (TextView)
                     itemView.findViewById(R.id.noteId);
             favBtn = itemView.findViewById(R.id.favouriteBtn);

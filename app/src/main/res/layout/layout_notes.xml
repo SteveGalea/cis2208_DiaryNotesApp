@@ -6,7 +6,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+    <!-- Media -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="194dp"
+        android:id="@+id/note_img"
+        app:srcCompat="@drawable/ic_baseline_image_24"
+        android:scaleType="centerCrop"
+        android:contentDescription="Note image"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -109,6 +122,7 @@
             android:text="TextView"
             android:visibility="invisible" />
 
+    </LinearLayout>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
