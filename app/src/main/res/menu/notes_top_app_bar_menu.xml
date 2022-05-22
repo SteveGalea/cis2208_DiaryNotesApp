@@ -12,7 +12,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/save"
-        android:title="Save Task"
+        android:title="Save Note"
         android:icon="@drawable/ic_baseline_check_24"
         android:contentDescription="Edit/Save this note"
         app:showAsAction="ifRoom" />

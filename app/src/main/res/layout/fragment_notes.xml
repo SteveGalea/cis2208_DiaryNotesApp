@@ -25,8 +25,11 @@
         android:id="@+id/text_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="35sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/notes_icon_top" />
 
     <LinearLayout
@@ -35,13 +38,23 @@
         app:layout_constraintTop_toBottomOf="@+id/text_notes"
         tools:ignore="MissingConstraints"
         android:orientation="vertical">
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchNotes"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            tools:ignore="MissingConstraints" />
+            android:hint="\tSearch"
+            android:id="@+id/searchTextField"
+            app:helperText="Input note title to search"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_baseline_search_24"
+                app:actionViewClass="androidx.appcompat.widget.SearchView"
+                tools:ignore="MissingConstraints" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.chip.Chip
             android:layout_width="wrap_content"

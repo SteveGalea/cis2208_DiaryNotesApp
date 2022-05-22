@@ -20,13 +20,13 @@ public class NotesViewModel extends ViewModel {
     public NotesViewModel() {
         mText = new MutableLiveData<>();
         notesMutable = new MutableLiveData<>();
-        mText.setValue("This is notes fragment");
+        mText.setValue("Notes");
     }
 
     public LiveData<String> getText() {
         return mText;
     }
-    public LiveData<List<Note>> geNotesMutable(Context context) {
+    public LiveData<List<Note>> getNotesMutable(Context context) {
         DbHelperTasks dbHelper = new DbHelperTasks(context);
         ArrayList<Note> notes= dbHelper.getNotes();
         notesMutable.setValue(notes);

@@ -25,6 +25,7 @@ import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.ui.NoteActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotesAdapter extends
@@ -90,43 +91,9 @@ public class NotesAdapter extends
         dateTextView.setText(date);
         notesTextView.setText(notes);
         noteIdTextView.setText(noteId);
-        imageChooser();
 
     }
-    int SELECT_PICTURE = 200;
-    void imageChooser() {
 
-        // create an instance of the
-        // intent of the type image
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-
-        // pass the constant to compare it
-        // with the returned requestCode
-
-        //startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
-    }
-    // this function is triggered when user
-    // selects the image from the imageChooser
-    //@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url of the image from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // update the preview image in the layout
-                    imageView.setImageURI(selectedImageUri);
-                }
-            }
-        }
-    }
     @Override
     public int getItemCount() {
         if(num != -1){
@@ -138,6 +105,13 @@ public class NotesAdapter extends
         }
         return items.size();
     }
+
+    // method for filtering our recyclerview items.
+    public void filterList(ArrayList<Note> filterlist) {
+        items = filterlist;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public TextView notesTextView;

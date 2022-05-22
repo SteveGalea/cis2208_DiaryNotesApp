@@ -1,11 +1,16 @@
 package com.example.diarynotesapp.ui.notes;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +30,8 @@ import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.databinding.FragmentNotesBinding;
 import com.example.diarynotesapp.ui.NoteActivity;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +42,7 @@ public class NotesFragment extends Fragment {
     private NotesViewModel notesViewModel;
     private NotesAdapter adapter;
     private RecyclerView notesView;
+    private TextInputEditText searchTextInput;
 
     private List<Note> notes = new ArrayList<>();
 
@@ -83,7 +91,50 @@ public class NotesFragment extends Fragment {
         notesView = root.findViewById(R.id.notes_list);
 
         resetRecyclerView();
+
+        searchTextInput = root.findViewById(R.id.searchNotes);
+        searchTextInput.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filter(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
         return root;
+    }
+    private void filter(String text) {
+        // creating a new array list to filter our data.
+        ArrayList<Note> filteredlist = new ArrayList<>();
+
+        // running a for loop to compare elements.
+        for (Note item : notes) {
+            // checking if the entered string matched with any item of our recycler view.
+            if (item.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                filteredlist.add(item);
+            }
+        }
+        if (filteredlist.isEmpty()) {
+            // if no item is added in filtered list we are
+            // displaying a toast message as no data found.
+            Toast.makeText(this.getContext(), "No Data Found..", Toast.LENGTH_SHORT).show();
+        } else {
+            // at last we are passing that filtered
+            // list to our adapter class.
+            adapter.filterList(filteredlist);
+        }
     }
 
     @Override
@@ -94,7 +145,7 @@ public class NotesFragment extends Fragment {
     }
 
     private void fetchItems() {
-        notesViewModel.geNotesMutable(getContext()).observe(getViewLifecycleOwner(),
+        notesViewModel.getNotesMutable(getContext()).observe(getViewLifecycleOwner(),
                 this::updateNotesList);
     }
 
