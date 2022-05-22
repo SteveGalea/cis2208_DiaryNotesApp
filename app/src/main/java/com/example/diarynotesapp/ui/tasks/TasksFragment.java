@@ -68,7 +68,7 @@ public class TasksFragment extends Fragment {
         tasksViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
-        TextView taskCount = root.findViewById(R.id.task_total);
+
 
         //FAB
         extendedFabTask.setOnClickListener(new View.OnClickListener(){
@@ -80,7 +80,7 @@ public class TasksFragment extends Fragment {
                         Toast.LENGTH_SHORT);
                 toast.show();
                 Intent intent1 = new Intent(getActivity(), TaskActivity.class);
-                intent1.putExtra("Activity", "Add");
+                intent1.putExtra("TaskActivity", "Add");
                 someActivityResultLauncher.launch(intent1);
             }
         });

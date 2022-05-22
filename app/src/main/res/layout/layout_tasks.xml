@@ -23,6 +23,14 @@
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textSize="25dp" />
 
+
+        <View
+            android:id="@+id/lineBreak1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="-20dp"
+            android:background="#000000"/>
+
         <TextView
             android:id="@+id/details"
             android:layout_width="wrap_content"

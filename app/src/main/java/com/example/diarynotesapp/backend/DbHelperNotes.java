@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class DbHelperNotes extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "appDb.db";
     private final String _title = NoteDb.NoteEntry.COLUMN_NAME_TITLE;
     private final String _noteText = NoteDb.NoteEntry.COLUMN_NAME_NOTE_TEXT;
@@ -26,6 +26,7 @@ public class DbHelperNotes extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
+        System.out.println("constructor");
         db.execSQL(createTables());
     }
 
@@ -41,6 +42,7 @@ public class DbHelperNotes extends SQLiteOpenHelper {
     }
 
     private String createTables() {
+        System.out.println("CREATE TABLE "+ NoteDb.NoteEntry.TABLE_NAME+" ("+ NoteDb.NoteEntry._ID+ " INTEGER PRIMARY KEY, " + _title + " varchar, "+_noteText + " varchar, "+_imageURL + " varchar, "+_favourite+ " varchar, "+_date+ " varchar)");
         return "CREATE TABLE "+ NoteDb.NoteEntry.TABLE_NAME+" ("+ NoteDb.NoteEntry._ID+ " INTEGER PRIMARY KEY, " + _title + " varchar, "+_noteText + " varchar, "+_imageURL + " varchar, "+_favourite+ " varchar, "+_date+ " varchar)";
     }
 
@@ -138,4 +140,31 @@ public class DbHelperNotes extends SQLiteOpenHelper {
         return note;
     }
 
+    public void updateNoteById(Note note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(_title, note.getTitle());
+        values.put(_noteText, note.getNoteText());
+        values.put(_imageURL, note.getImageURL());
+        values.put(_favourite, note.getFavourite());
+        values.put(_date, note.getDate());
+        db.update(NoteDb.NoteEntry.TABLE_NAME,  values, "_id =?", new String[]{String.valueOf(note.getId())});
+    }
+
+    public void removeNoteById(long id) {
+        // Filter results WHERE "id" = condition
+        String selection = BaseColumns._ID + " = ?";
+        System.out.println(BaseColumns._ID );
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+
+        System.out.println(selectionArgs[0]);
+        int deletedRows= deleteDataById(selectionArgs[0]);
+        System.out.println("deleted:"+deletedRows);
+    }
+    public int deleteDataById(String Id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int deletedRows = db.delete(NoteDb.NoteEntry.TABLE_NAME, "_id = ?", new String[] {Id});
+        db.close();
+        return deletedRows;
+    }
 }

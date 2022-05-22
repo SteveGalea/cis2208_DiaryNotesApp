@@ -103,7 +103,7 @@ public class TaskActivity extends AppCompatActivity {
         mShowSelectedDateText = findViewById(R.id.show_selected_date);
         sliderShowProgressText = findViewById(R.id.show_progress_percentage);
 
-        if (getIntent().getStringExtra("Activity").equals("Edit")) {
+        if (getIntent().getStringExtra("TaskActivity").equals("Edit")) {
             int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
             if (userId != -2) {
 
@@ -200,6 +200,26 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 validateTaskName();
+            }
+        });
+
+        taskDetails.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                validateTaskDetails();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                validateTaskDetails();
             }
         });
     }
@@ -314,7 +334,7 @@ public class TaskActivity extends AppCompatActivity {
         }
 
         Task task;
-        if (getIntent().getStringExtra("Activity").equals("Add"))
+        if (getIntent().getStringExtra("TaskActivity").equals("Add"))
         {
             task = new Task(
                     -1,

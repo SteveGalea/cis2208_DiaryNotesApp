@@ -187,7 +187,7 @@ public class TasksAdapter extends
                     int id = Integer.parseInt(taskIdTextView.getText().toString());
                     Intent intent = new Intent(v.getContext(), TaskActivity.class);
                     intent.putExtra("ID", id);
-                    intent.putExtra("Activity", "Edit");
+                    intent.putExtra("TaskActivity", "Edit");
                     v.getContext().startActivity(intent);
 
                     notifyDataSetChanged();
@@ -220,7 +220,7 @@ public class TasksAdapter extends
             int id = Integer.parseInt(taskIdTextView.getText().toString());
             Intent intent = new Intent(v.getContext(), TaskActivity.class);
             intent.putExtra("ID", id);
-            intent.putExtra("Activity", "Edit");
+            intent.putExtra("TaskActivity", "Edit");
             v.getContext().startActivity(intent);
             //someActivityResultLauncher.launch(intent);
             //set edit details

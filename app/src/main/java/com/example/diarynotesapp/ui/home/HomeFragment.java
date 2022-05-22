@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.diarynotesapp.MainActivity;
+import com.example.diarynotesapp.NotesUI.Note;
+import com.example.diarynotesapp.NotesUI.NotesAdapter;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.TasksUI.Task;
 import com.example.diarynotesapp.TasksUI.TasksAdapter;
@@ -63,13 +65,18 @@ public class HomeFragment extends Fragment{
     private ExtendedFloatingActionButton extendedFabTask;
     private ExtendedFloatingActionButton extendedFabNote;
     private HomeViewModel homeViewModel;
-    private TasksAdapter adapter;
+
+    private TasksAdapter adapterTasks;
+    private NotesAdapter adapterNotes;
+
+
     private RecyclerView tasksView;
-    private MaterialCardView card;
+    private RecyclerView notesView;
 
 
-    TextView taskCount;
     private List<Task> tasks = new ArrayList<>();
+    private List<Note> notes = new ArrayList<>();
+
 
 
     public ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
@@ -80,8 +87,12 @@ public class HomeFragment extends Fragment{
                     System.out.println(result.getResultCode());
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // There are no request codes
-                        //Intent data = result.getData();
-                        resetRecyclerView();
+                        Intent data = result.getData();
+                        if(data.getStringExtra("TaskActivity")!=null){
+                            resetTasksRecyclerView();
+                        }else{
+                            resetNotesRecyclerView();
+                        }
                     }
                 }
             });
@@ -89,6 +100,7 @@ public class HomeFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         tasks.clear();
+        notes.clear();
 
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
@@ -120,7 +132,7 @@ public class HomeFragment extends Fragment{
                             Toast.LENGTH_SHORT);
                     toast.show();
                     Intent intent1 = new Intent(getActivity(), TaskActivity.class);
-                    intent1.putExtra("Activity", "Add");
+                    intent1.putExtra("TaskActivity", "Add");
                     someActivityResultLauncher.launch(intent1);
                     //adapter = new TasksAdapter(tasks);
 
@@ -137,7 +149,8 @@ public class HomeFragment extends Fragment{
                             Toast.LENGTH_SHORT);
                     toast.show();
                    Intent intent2 = new Intent(getActivity(), NoteActivity.class);
-                   startActivity(intent2);
+                   intent2.putExtra("NoteActivity", "Add");
+                   someActivityResultLauncher.launch(intent2);
                 }
             });
         //quote
@@ -231,8 +244,10 @@ public class HomeFragment extends Fragment{
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         tasksView = root.findViewById(R.id.tasks_list);
+        notesView = root.findViewById(R.id.tasks_list);
 
-        resetRecyclerView();
+        resetTasksRecyclerView();
+        resetNotesRecyclerView();
 
 
 
@@ -246,33 +261,57 @@ public class HomeFragment extends Fragment{
         binding = null;
     }
 
-    private void fetchItems() {
+    private void fetchTasksItems() {
         homeViewModel.getTasksMutable(getContext()).observe(getViewLifecycleOwner(),
                 this::updateTasksList);
     }
+    private void fetchNotesItems() {
+        homeViewModel.getNotesMutable(getContext()).observe(getViewLifecycleOwner(),
+                this::updateNotesList);
+    }
 
-    private void setUpRecyclerView() {
+    private void setUpTasksRecyclerView() {
         //adapter = new TasksAdapter(tasks,5);
-        adapter = new TasksAdapter(tasks);
-        adapter.setNum(3);
-        tasksView.setAdapter(adapter);
+        adapterTasks = new TasksAdapter(tasks);
+        adapterTasks.setNum(3);
+        tasksView.setAdapter(adapterTasks);
         tasksView.setLayoutManager(new LinearLayoutManager(tasksView.getContext()));
+    }
+    private void setUpNotesRecyclerView() {
+        //adapter = new TasksAdapter(tasks,5);
+        adapterNotes = new NotesAdapter(notes);
+        adapterNotes.setNum(3);
+        notesView.setAdapter(adapterTasks);
+        notesView.setLayoutManager(new LinearLayoutManager(notesView.getContext()));
     }
 
     private void updateTasksList(List<Task> newTasks) {
         tasks.clear();
         tasks.addAll(newTasks);
-        adapter.notifyDataSetChanged();
+        adapterTasks.notifyDataSetChanged();
     }
-    public void resetRecyclerView(){
+    private void updateNotesList(List<Note> newNotes) {
+        notes.clear();
+        notes.addAll(newNotes);
+        adapterNotes.notifyDataSetChanged();
+    }
+
+    public void resetTasksRecyclerView(){
         tasks.clear();
-        setUpRecyclerView();
-        fetchItems();
+        setUpTasksRecyclerView();
+        fetchTasksItems();
+
+    }
+    public void resetNotesRecyclerView(){
+        notes.clear();
+        setUpNotesRecyclerView();
+        fetchNotesItems();
 
     }
 
     public void onResume() {
-        resetRecyclerView();
+        resetTasksRecyclerView();
+        resetNotesRecyclerView();
         super.onResume();
     }
 }

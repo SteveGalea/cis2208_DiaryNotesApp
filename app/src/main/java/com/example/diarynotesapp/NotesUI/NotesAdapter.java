@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,16 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.TasksUI.Task;
+import com.example.diarynotesapp.backend.DbHelperNotes;
 import com.example.diarynotesapp.backend.DbHelperTasks;
+import com.example.diarynotesapp.ui.NoteActivity;
 import com.example.diarynotesapp.ui.TaskActivity;
 
 import java.util.List;
 
 public class NotesAdapter extends
         RecyclerView.Adapter<NotesAdapter.ViewHolder> {
-    private List<Task> items;
+    private List<Note> items;
     private int num = -1;
-    public NotesAdapter(List<Task> items) {
+    public NotesAdapter(List<Note> items) {
         this.items = items;
     }
     public void setNum(int num){
@@ -48,52 +51,40 @@ public class NotesAdapter extends
             viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.layout_tasks, parent,
+        View itemView = inflater.inflate(R.layout.layout_notes, parent,
                 false);
         return new ViewHolder(itemView);
     }
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
 
-        Task item = items.get(position);
+        Note item = items.get(position);
 
-        TextView titleTextView = holder.titleTextView;
-        TextView detailsTextView = holder.detailsTextView;
-        TextView dueDateTextView = holder.dueDateTextView;
-        TextView progressTextView = holder.progressTextView;
-        TextView taskIdTextView = holder.taskIdTextView;
+        ImageView imageView = holder.imageView;
+        TextView nameTextView = holder.nameTextView;
+        TextView dateTextView = holder.dateTextView;
+        TextView notesTextView = holder.notesTextView;
+        TextView noteIdTextView = holder.noteIdTextView;
 
-        String name = "Task: "+item.getName();
-        String details ="\tTask Details: "+item.getDetails();
-        String date = "\tDue on: "+item.getDateDue();
-        String progressSlider= "\tFinished: "+item.getProgress()+"%";
-        String taskId = item.getId()+"";
+        String name = "Note: "+item.getTitle();
+        String date = "\tLast Update: "+item.getDate();
+        String notes = "\tNotes:\n\t"+item.getDate();
+        //String?
+        String imageUrl = item.getImageURL();
+        String noteId = item.getId()+"";
 
-        if(item.getFlag().equals("Complete")){
-            titleTextView.setText("Archived "+name);
-        }else{
-            titleTextView.setText(name);
+        Button favBtn = holder.favBtn;
+        favBtn.setBackgroundColor(R.color.md_theme_light_primary);
+        if(item.getFavourite().equals("Favourited")){
+            favBtn.setBackgroundColor(Color.YELLOW);
         }
 
-        detailsTextView.setText(details);
-        dueDateTextView.setText(date);
-        progressTextView.setText(progressSlider);
-        taskIdTextView.setText(taskId);
-        double progress;
-        if(item.getProgress()==null||item.getProgress().equals("")){
-            progress = 0.0;
-        }else{
-            progress = Double.parseDouble(item.getProgress());
-        }
-        if(progress > 75.0) {
-            progressTextView.setTextColor(Color.GREEN);
-        }    else{
-            if(progress > 45.0) {
-                progressTextView.setTextColor(Color.MAGENTA);
-            }
-            else{ progressTextView.setTextColor(Color.RED);}
-        }
+        nameTextView.setText(name);
+        dateTextView.setText(date);
+        notesTextView.setText(notes);
+        noteIdTextView.setText(noteId);
     }
     @Override
     public int getItemCount() {
@@ -107,27 +98,27 @@ public class NotesAdapter extends
         return items.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleTextView;
-        public TextView detailsTextView;
-        public TextView dueDateTextView;
-        public TextView progressTextView;
-        public TextView taskIdTextView;
-        public Button actionBtn;
+        public TextView nameTextView;
+        public TextView notesTextView;
+        public TextView dateTextView;
+        public ImageView imageView;
+        public TextView noteIdTextView;
+
+        public Button favBtn;
         public Button editBtn;
         public Button deleteBtn;
         public ViewHolder(final View itemView) {
             super(itemView);
-            titleTextView = (TextView)
-                    itemView.findViewById(R.id.title);
-            detailsTextView = (TextView)
-                    itemView.findViewById(R.id.details);
-            dueDateTextView = (TextView)
+            nameTextView = (TextView)
+                    itemView.findViewById(R.id.noteTitle);
+            dateTextView = (TextView)
                     itemView.findViewById(R.id.due_date);
-            progressTextView = (TextView)
-                    itemView.findViewById(R.id.progress);
-            taskIdTextView = (TextView)
-                    itemView.findViewById(R.id.taskId);
-            actionBtn = itemView.findViewById(R.id.doneBtn);
+            notesTextView = (TextView)
+                    itemView.findViewById(R.id.notes);
+            imageView = (ImageView) itemView.findViewById(R.id.image_id);
+            noteIdTextView = (TextView)
+                    itemView.findViewById(R.id.noteId);
+            favBtn = itemView.findViewById(R.id.favouriteBtn);
             editBtn = itemView.findViewById(R.id.editBtn);
             deleteBtn = itemView.findViewById(R.id.deleteBtn);
 
@@ -140,22 +131,22 @@ public class NotesAdapter extends
                 }
 
             });
-            actionBtn.setOnClickListener(new View.OnClickListener(){
+            favBtn.setOnClickListener(new View.OnClickListener(){
+                @SuppressLint("ResourceAsColor")
                 @Override
                 public void onClick(View v) {
 
-                    int id = Integer.parseInt(taskIdTextView.getText().toString());
-                    DbHelperTasks dbHelperTasks = new DbHelperTasks(v.getContext());
-                    Task task = dbHelperTasks.getTaskById(id);
+                    int id = Integer.parseInt(noteIdTextView.getText().toString());
+                    DbHelperNotes dbHelperNotes = new DbHelperNotes(v.getContext());
+                    Note note = dbHelperNotes.getNoteById(id);
 
-                    if(task.getFlag().equals("Pending")){
-                        task.setFlag("Complete");
-                        titleTextView.setText("Archived "+titleTextView.getText().toString());
-                    }else {
-                        task.setFlag("Pending");
-                        titleTextView.setText("Task: "+task.getName());
+
+
+                    favBtn.setBackgroundColor(R.color.md_theme_light_primary);
+                    if(note.getFavourite().equals("Favourited")){
+                        favBtn.setBackgroundColor(Color.YELLOW);
                     }
-                    dbHelperTasks.updateTaskById(task);
+                    dbHelperNotes.updateNoteById(note);
 
                 }
             });
@@ -164,10 +155,10 @@ public class NotesAdapter extends
 // in the mime type you'd like to allow the user to select
                 @Override
                 public void onClick(View v) {
-                    int id = Integer.parseInt(taskIdTextView.getText().toString());
-                    Intent intent = new Intent(v.getContext(), TaskActivity.class);
+                    int id = Integer.parseInt(noteIdTextView.getText().toString());
+                    Intent intent = new Intent(v.getContext(), NoteActivity.class);
                     intent.putExtra("ID", id);
-                    intent.putExtra("Activity", "Edit");
+                    intent.putExtra("NoteActivity", "Edit");
                     v.getContext().startActivity(intent);
                     //someActivityResultLauncher.launch(intent);
                     //set edit details
@@ -180,7 +171,7 @@ public class NotesAdapter extends
                 public void onClick(View v) {
                     System.out.println("Clicked Delete");
                     int pos = getAdapterPosition(); // position of card in recycler view list
-                    DbHelperTasks dbHelperTasks = new DbHelperTasks(v.getContext());
+                    DbHelperNotes dbHelperNotes = new DbHelperNotes(v.getContext());
                     long removeId = items.get(pos).getId();
 
                     /*if(getItemCount()> 0) {
@@ -190,7 +181,7 @@ public class NotesAdapter extends
                         }
 
                     }*/
-                    dbHelperTasks.removeTaskById(removeId);
+                    dbHelperNotes.removeNoteById(removeId);
                     items.remove(items.get(pos));
                     notifyDataSetChanged();
                 }
@@ -200,14 +191,15 @@ public class NotesAdapter extends
         @SuppressLint("ResourceAsColor")
         public void itemOnClick(View v) {
 
-            /*final MaterialCardView cardView = v.findViewById(R.id.card);
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                    cardView.setChecked(!cardView.isChecked());
-                    //cardView.toggle();
-                }
-            });*/
+            int id = Integer.parseInt(noteIdTextView.getText().toString());
+            Intent intent = new Intent(v.getContext(), NoteActivity.class);
+            intent.putExtra("ID", id);
+            intent.putExtra("NoteActivity", "Edit");
+            v.getContext().startActivity(intent);
+            //someActivityResultLauncher.launch(intent);
+            //set edit details
 
+            notifyDataSetChanged();
         }
     }
 }
