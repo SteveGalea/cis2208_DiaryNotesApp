@@ -74,6 +74,6 @@ public class Note implements Serializable {
     }
 
     public String getDate() {
-        return _date;
+        return (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")).format(new Date());
     }
 }

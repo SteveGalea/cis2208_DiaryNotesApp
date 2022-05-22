@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class DbHelperNotes extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "appDb.db";
     private final String _title = NoteDb.NoteEntry.COLUMN_NAME_TITLE;
     private final String _noteText = NoteDb.NoteEntry.COLUMN_NAME_NOTE_TEXT;

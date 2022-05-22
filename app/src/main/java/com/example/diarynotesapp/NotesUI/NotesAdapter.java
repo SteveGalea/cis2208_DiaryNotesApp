@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class NotesAdapter extends
 
         String name = "Note: "+item.getTitle();
         String date = "\tLast Update: "+item.getDate();
-        String notes = "\tNotes:\n\t"+item.getDate();
+        String notes = "\tNotes:\n\t"+item.getNoteText();
         //String?
         String imageUrl = item.getImageURL();
         String noteId = item.getId()+"";
@@ -80,7 +81,7 @@ public class NotesAdapter extends
         if(item.getFavourite().equals("Favourited")){
             favBtn.setBackgroundColor(Color.YELLOW);
         }
-
+        imageView.setImageURI(Uri.parse(imageUrl));
         nameTextView.setText(name);
         dateTextView.setText(date);
         notesTextView.setText(notes);
@@ -112,7 +113,7 @@ public class NotesAdapter extends
             nameTextView = (TextView)
                     itemView.findViewById(R.id.noteTitle);
             dateTextView = (TextView)
-                    itemView.findViewById(R.id.due_date);
+                    itemView.findViewById(R.id.date_update);
             notesTextView = (TextView)
                     itemView.findViewById(R.id.notes);
             imageView = (ImageView) itemView.findViewById(R.id.image_id);
@@ -174,13 +175,6 @@ public class NotesAdapter extends
                     DbHelperNotes dbHelperNotes = new DbHelperNotes(v.getContext());
                     long removeId = items.get(pos).getId();
 
-                    /*if(getItemCount()> 0) {
-                        long removeId = items.get(pos).getId();
-                        if (removeId <= getItemCount()) {
-                            System.out.println("Removed: ");
-                        }
-
-                    }*/
                     dbHelperNotes.removeNoteById(removeId);
                     items.remove(items.get(pos));
                     notifyDataSetChanged();

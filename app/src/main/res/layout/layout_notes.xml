@@ -16,7 +16,6 @@
         android:id="@+id/image_id"
         android:layout_width="match_parent"
         android:layout_height="194dp"
-        app:srcCompat="@drawable/ic_launcher_foreground"
         android:scaleType="centerCrop"
         android:contentDescription="User upload"
         />
