@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -47,7 +48,7 @@ public class NoteActivity extends AppCompatActivity {
     EditText notesText;
     Bitmap fetchedImageUri;
 
-    TextInputLayout tilNoteTitle,tilNoteText;
+    TextInputLayout tilNoteTitle,tilNoteText, tilImageText;
 
     //initialisation
     int RESULT_LOAD_IMG = 1;
@@ -89,9 +90,10 @@ public class NoteActivity extends AppCompatActivity {
 
         tilNoteTitle = findViewById(R.id.textField);
         tilNoteText = findViewById(R.id.detailsField);
+        tilImageText = findViewById(R.id.imageError);
         //imageView = findViewById(R.id.no);
 
-        topAppBar = (MaterialToolbar) findViewById(R.id.topAppBar);
+        topAppBar = (MaterialToolbar) findViewById(R.id.topAppBarNotes);
         setSupportActionBar(topAppBar);
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,8 +181,16 @@ public class NoteActivity extends AppCompatActivity {
     // custom validation
     private boolean validateImage(){
         if(fetchedImageUri == null){
+            tilImageText.setError("Image not selected! Select an image please.");
+            tilImageText.getEditText().setText("Nope");
             return false;
         }
+        tilImageText.setError(null);
+        tilImageText.setErrorEnabled(false);
+        tilImageText.getEditText().setText("Yep");
+        tilImageText.getEditText().setTextColor(Color.GREEN);
+        tilImageText.setHelperText("");
+
         return true;
     }
 
