@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment{
                     Intent intent1 = new Intent(getActivity(), TaskActivity.class);
                     intent1.putExtra("TaskActivity", "Add");
                     someActivityResultLauncher.launch(intent1);
-                    //adapter = new TasksAdapter(tasks);
+                    //adapter = new AlertsAdapter(tasks);
 
                     //onCreateView(inflater,container, savedInstanceState);
 
@@ -247,7 +247,7 @@ public class HomeFragment extends Fragment{
     }
 
     private void setUpTasksRecyclerView() {
-        //adapter = new TasksAdapter(tasks,5);
+        //adapter = new AlertsAdapter(tasks,5);
         adapterTasks = new TasksAdapter(tasks);
         adapterTasks.setNum(3);
         tasksView.setAdapter(adapterTasks);

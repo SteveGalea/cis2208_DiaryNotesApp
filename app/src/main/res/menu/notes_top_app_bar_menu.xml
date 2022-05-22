@@ -9,11 +9,13 @@
         android:title="Delete Note"
         android:icon="@drawable/ic_delete_black_24dp"
         android:contentDescription="Remove this note"
+        android:iconTint="@color/md_theme_light_tertiary"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/save"
         android:title="Save Note"
         android:icon="@drawable/ic_baseline_check_24"
+        android:iconTint="@color/md_theme_dark_primaryContainer"
         android:contentDescription="Edit/Save this note"
         app:showAsAction="ifRoom" />
 

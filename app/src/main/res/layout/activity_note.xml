@@ -19,7 +19,7 @@
         android:layout_height="?attr/actionBarSize"
         app:title="Notes"
         app:menu="@menu/notes_top_app_bar_menu"
-
+        app:navigationIconTint="@color/md_theme_light_error"
         app:navigationIcon="@drawable/ic_close_24dp"/>
 
   </com.google.android.material.appbar.AppBarLayout>
@@ -136,7 +136,6 @@
             android:focusable="false"
             android:cursorVisible="false"
             android:editable="false"
-            android:background="@color/material_dynamic_secondary60"
             />
 
         </com.google.android.material.textfield.TextInputLayout>

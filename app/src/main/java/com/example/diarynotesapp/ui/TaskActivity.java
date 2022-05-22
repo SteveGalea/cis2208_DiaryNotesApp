@@ -28,7 +28,9 @@ import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -151,7 +153,7 @@ public class TaskActivity extends AppCompatActivity {
                         // It will be negative, so that's the -1
                         int offsetFromUTC = timeZoneUTC.getOffset(new Date().getTime()) * -1;
                         // Create a date format, then a date object with our offset
-                        SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                        SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
                         Date date = new Date(selection + offsetFromUTC);
                         mShowSelectedDateText.setText(simpleFormat.format(date));
                     }
@@ -246,10 +248,24 @@ public class TaskActivity extends AppCompatActivity {
 
     }
 
-    private boolean validateDate(){
+    private boolean validateDate() {
         String value = tilDate.getEditText().getText().toString().trim();
-        if(value.isEmpty()){
+        Date date2 = null;
+        try {
+            date2 = (new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)).parse(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        long difference_In_Time = date2.getTime()-today.getTime();
+
+        if (value.isEmpty()) {
             tilDate.setError("Date Field can not be left empty!");
+            return false;
+        }
+        else if(difference_In_Time < 0){
+            tilDate.setError("Input a future date, please!");
             return false;
         }
         else{
@@ -290,7 +306,6 @@ public class TaskActivity extends AppCompatActivity {
                 Intent _result = new Intent();
                 Toast.makeText(this, "Removing from Database", Toast.LENGTH_SHORT)
                         .show();
-                //Task t = getTaskId()
                 db.removeTaskById(userId);
 
                 _result.putExtra("Deleted Task", userId);

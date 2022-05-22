@@ -19,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/title_tasks"
             app:menu="@menu/task_top_app_bar_menu"
-
+            app:navigationIconTint="@color/md_theme_light_error"
             app:navigationIcon="@drawable/ic_close_24dp"/>
 
     </com.google.android.material.appbar.AppBarLayout>

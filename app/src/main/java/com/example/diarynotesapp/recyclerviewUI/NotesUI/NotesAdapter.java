@@ -96,15 +96,16 @@ public class NotesAdapter extends
         Button favBtn = holder.favBtn;
         favBtn.setTextColor(R.color.md_theme_light_primary);
         if(item.getFavourite().equals("Favourites")){
-            favBtn.setTextColor(Color.RED);
+            favBtn.setTextColor(R.color.md_theme_light_error);
         }
         if(!imageUrl.equals("")) {
-            imageViewCard.setImageBitmap(StringToBitMap(imageUrl));
+            imageViewCard.setImageBitmap(StringToBitMap(item.getImageURL()));
         }
         nameTextView.setText(name);
         dateTextView.setText(date);
         notesTextView.setText(notes);
         noteIdTextView.setText(noteId);
+        favBtn.performClick();
 
     }
 
@@ -172,9 +173,13 @@ public class NotesAdapter extends
 
 
 
-                    favBtn.setBackgroundColor(R.color.md_theme_light_primary);
-                    if(note.getFavourite().equals("Favourited")){
-                        favBtn.setBackgroundColor(Color.YELLOW);
+
+                    if(note.getFavourite().equals("Favourites")){
+                        favBtn.setText("Unfavourite");
+                        note.setFavourite("");
+                    }else if(note.getFavourite().equals("")){
+                        favBtn.setText("Favourite");
+                        note.setFavourite("Favourites");
                     }
                     dbHelperNotes.updateNoteById(note);
 

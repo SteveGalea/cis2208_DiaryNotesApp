@@ -46,7 +46,7 @@ public class NotesFragment extends Fragment {
     private TextInputEditText searchTextInput;
     private Chip favourites;
     private boolean favFilter = false;
-    private List<Note> notes = new ArrayList<>();
+    private ArrayList<Note> notes = new ArrayList<>();
 
     public ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -163,17 +163,20 @@ public class NotesFragment extends Fragment {
         String compareElem = "";
         if(value == true){
             compareElem = "Favourites";
+            for (Note item : notes) {
+                // checking if the entered string matched with any item of our recycler view.
+                if (item.getFavourite().toLowerCase().contains(compareElem.toLowerCase())) {
+                    // if the item is matched we are
+                    // adding it to our filtered list.
+                    filteredlist.add(item);
+                    Toast.makeText(this.getContext(), "Filtered by filter click!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }else{
+            filteredlist = notes;
         }
         // running a for loop to compare elements.
-        for (Note item : notes) {
-            // checking if the entered string matched with any item of our recycler view.
-            if (item.getFavourite().toLowerCase().contains(compareElem.toLowerCase())) {
-                // if the item is matched we are
-                // adding it to our filtered list.
-                filteredlist.add(item);
-                Toast.makeText(this.getContext(), "Filtered by filter click!", Toast.LENGTH_SHORT).show();
-            }
-        }
+
         adapter.filterList(filteredlist);
 
     }
@@ -190,7 +193,7 @@ public class NotesFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
-        //adapter = new TasksAdapter(tasks,5);
+        //adapter = new AlertsAdapter(tasks,5);
         adapter = new NotesAdapter(notes);
         notesView.setAdapter(adapter);
         notesView.setLayoutManager(new LinearLayoutManager(notesView.getContext()));

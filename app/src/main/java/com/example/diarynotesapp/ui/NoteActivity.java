@@ -259,7 +259,6 @@ public class NoteActivity extends AppCompatActivity {
                 Intent _result = new Intent();
                 Toast.makeText(this, "Removing from Database", Toast.LENGTH_SHORT)
                         .show();
-                //Task t = getTaskId()
                 db.removeNoteById(userId);
 
                 _result.putExtra("Deleted Note", userId);

@@ -103,7 +103,7 @@ public class TasksFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
-        //adapter = new TasksAdapter(tasks,5);
+        //adapter = new AlertsAdapter(tasks,5);
         adapter = new TasksAdapter(tasks);
         tasksView.setAdapter(adapter);
         tasksView.setLayoutManager(new LinearLayoutManager(tasksView.getContext()));
