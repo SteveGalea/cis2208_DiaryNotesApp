@@ -2,8 +2,6 @@ package com.example.diarynotesapp.backend;
 
 import android.provider.BaseColumns;
 
-import java.time.DateTimeException;
-
 public final class NoteDb {
     /* Inner class that defines the table contents */
     public static class NoteEntry implements BaseColumns {

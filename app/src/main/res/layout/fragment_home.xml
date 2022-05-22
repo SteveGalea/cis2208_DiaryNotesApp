@@ -209,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="See the rest in Notes"
+                android:text="Go to Notes"
                 android:textSize="15dp"
                 app:icon="@drawable/ic_notes_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.diarynotesapp.TasksUI.Task;
+import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 
 import java.util.ArrayList;

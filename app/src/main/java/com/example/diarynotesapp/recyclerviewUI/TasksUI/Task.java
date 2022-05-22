@@ -1,4 +1,4 @@
-package com.example.diarynotesapp.TasksUI;
+package com.example.diarynotesapp.recyclerviewUI.TasksUI;
 
 import java.io.Serializable;
 

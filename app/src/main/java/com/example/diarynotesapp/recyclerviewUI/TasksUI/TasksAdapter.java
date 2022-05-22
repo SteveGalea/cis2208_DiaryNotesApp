@@ -1,4 +1,4 @@
-package com.example.diarynotesapp.TasksUI;
+package com.example.diarynotesapp.recyclerviewUI.TasksUI;
 
 
 
@@ -6,33 +6,21 @@ package com.example.diarynotesapp.TasksUI;
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.diarynotesapp.MainActivity;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.ui.TaskActivity;
-import com.example.diarynotesapp.ui.home.HomeFragment;
-import com.google.android.material.card.MaterialCardView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -46,16 +34,7 @@ public class TasksAdapter extends
     public void setNum(int num){
         this.num = num;
     }
-/*
-    public TasksAdapter(List<Task> items, int num) {
-        this.items = items;
-        this.num = num;
-    }*/
 
-
-
-    private void onEditCard(Task toBeEdited) {
-    }
 
     @NonNull
     @Override

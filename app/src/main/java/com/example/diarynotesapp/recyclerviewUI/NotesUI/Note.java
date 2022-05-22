@@ -1,6 +1,7 @@
-package com.example.diarynotesapp.NotesUI;
+package com.example.diarynotesapp.recyclerviewUI.NotesUI;
 
-import com.example.diarynotesapp.backend.NoteDb;
+import android.graphics.Bitmap;
+import android.net.Uri;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -10,24 +11,24 @@ public class Note implements Serializable {
     private long id;
     private String _title;
     private String _noteText;
-    private String _imageURL;
+    private String _imageBitmap;
     private String _favourite;
     private String _date;
 
     //constructors
-    public Note(long id, String _title, String _noteText, String _imageURL, String _favourite, String _date) {
+    public Note(long id, String _title, String _noteText, String _imageBitmap, String _favourite, String _date) {
         this.id = id;
         this._title = _title;
         this._noteText = _noteText;
-        this._imageURL = _imageURL;
+        this._imageBitmap = _imageBitmap;
         this._favourite = _favourite;
         this._date = _date; // different than below implementation
     }
-    public Note(long id, String _title, String _noteText, String _imageURL, String _favourite) {
+    public Note(long id, String _title, String _noteText, String _imageBitmap, String _favourite) {
         this.id = id;
         this._title = _title;
         this._noteText = _noteText;
-        this._imageURL = _imageURL;
+        this._imageBitmap = _imageBitmap;
         this._favourite = _favourite;
         this._date = (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")).format(new Date()); // set to now, convert to string
     }
@@ -58,11 +59,11 @@ public class Note implements Serializable {
     }
 
     public String getImageURL() {
-        return _imageURL;
+        return _imageBitmap;
     }
 
-    public void setImageURL(String _imageURL) {
-        this._imageURL = _imageURL;
+    public void setImageURL(String _imageBitmap) {
+        this._imageBitmap = _imageBitmap;
     }
 
     public String getFavourite() {

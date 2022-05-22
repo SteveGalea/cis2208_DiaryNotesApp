@@ -6,19 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-    <!-- Media -->
-    <ImageView
-        android:id="@+id/image_id"
-        android:layout_width="match_parent"
-        android:layout_height="194dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="User upload"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,6 +46,16 @@
 
         <TextView
             android:id="@+id/notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="\tNotes:\n"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:drawableStart="@drawable/ic_notes_black_24dp"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <ImageView
+            android:id="@+id/image_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
@@ -111,7 +109,6 @@
             android:text="TextView"
             android:visibility="invisible" />
 
-    </LinearLayout>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

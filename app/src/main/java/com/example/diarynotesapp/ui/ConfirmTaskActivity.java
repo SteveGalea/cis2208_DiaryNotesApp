@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.TasksUI.Task;
+import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 
 public class ConfirmTaskActivity extends AppCompatActivity {

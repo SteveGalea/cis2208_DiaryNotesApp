@@ -2,9 +2,7 @@ package com.example.diarynotesapp.ui.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,37 +16,27 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.diarynotesapp.MainActivity;
-import com.example.diarynotesapp.NotesUI.Note;
-import com.example.diarynotesapp.NotesUI.NotesAdapter;
+import com.example.diarynotesapp.databinding.FragmentHomeBinding;
+import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
+import com.example.diarynotesapp.recyclerviewUI.NotesUI.NotesAdapter;
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.TasksUI.Task;
-import com.example.diarynotesapp.TasksUI.TasksAdapter;
+import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
+import com.example.diarynotesapp.recyclerviewUI.TasksUI.TasksAdapter;
 import com.example.diarynotesapp.api.model.Quote;
 import com.example.diarynotesapp.api.rest.QuotesRestRepository;
-import com.example.diarynotesapp.databinding.FragmentHomeBinding;
 import com.example.diarynotesapp.ui.NoteActivity;
 import com.example.diarynotesapp.ui.TaskActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 public class HomeFragment extends Fragment{
@@ -67,15 +55,12 @@ public class HomeFragment extends Fragment{
     private HomeViewModel homeViewModel;
 
     private TasksAdapter adapterTasks;
-    private NotesAdapter adapterNotes;
 
 
     private RecyclerView tasksView;
-    private RecyclerView notesView;
 
 
     private List<Task> tasks = new ArrayList<>();
-    private List<Note> notes = new ArrayList<>();
 
 
 
@@ -90,8 +75,6 @@ public class HomeFragment extends Fragment{
                         Intent data = result.getData();
                         if(data.getStringExtra("TaskActivity")!=null){
                             resetTasksRecyclerView();
-                        }else{
-                            resetNotesRecyclerView();
                         }
                     }
                 }
@@ -100,7 +83,6 @@ public class HomeFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         tasks.clear();
-        notes.clear();
 
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
@@ -244,10 +226,8 @@ public class HomeFragment extends Fragment{
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         tasksView = root.findViewById(R.id.tasks_list);
-        notesView = root.findViewById(R.id.tasks_list);
 
         resetTasksRecyclerView();
-        resetNotesRecyclerView();
 
 
 
@@ -265,10 +245,6 @@ public class HomeFragment extends Fragment{
         homeViewModel.getTasksMutable(getContext()).observe(getViewLifecycleOwner(),
                 this::updateTasksList);
     }
-    private void fetchNotesItems() {
-        homeViewModel.getNotesMutable(getContext()).observe(getViewLifecycleOwner(),
-                this::updateNotesList);
-    }
 
     private void setUpTasksRecyclerView() {
         //adapter = new TasksAdapter(tasks,5);
@@ -277,41 +253,21 @@ public class HomeFragment extends Fragment{
         tasksView.setAdapter(adapterTasks);
         tasksView.setLayoutManager(new LinearLayoutManager(tasksView.getContext()));
     }
-    private void setUpNotesRecyclerView() {
-        //adapter = new TasksAdapter(tasks,5);
-        adapterNotes = new NotesAdapter(notes);
-        adapterNotes.setNum(3);
-        notesView.setAdapter(adapterTasks);
-        notesView.setLayoutManager(new LinearLayoutManager(notesView.getContext()));
-    }
 
     private void updateTasksList(List<Task> newTasks) {
         tasks.clear();
         tasks.addAll(newTasks);
         adapterTasks.notifyDataSetChanged();
     }
-    private void updateNotesList(List<Note> newNotes) {
-        notes.clear();
-        notes.addAll(newNotes);
-        adapterNotes.notifyDataSetChanged();
-    }
-
     public void resetTasksRecyclerView(){
         tasks.clear();
         setUpTasksRecyclerView();
         fetchTasksItems();
 
     }
-    public void resetNotesRecyclerView(){
-        notes.clear();
-        setUpNotesRecyclerView();
-        fetchNotesItems();
-
-    }
 
     public void onResume() {
         resetTasksRecyclerView();
-        resetNotesRecyclerView();
         super.onResume();
     }
 }

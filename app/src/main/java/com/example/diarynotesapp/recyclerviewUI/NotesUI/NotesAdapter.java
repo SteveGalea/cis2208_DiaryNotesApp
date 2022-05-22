@@ -1,9 +1,13 @@
-package com.example.diarynotesapp.NotesUI;
+package com.example.diarynotesapp.recyclerviewUI.NotesUI;
 
+
+import static android.app.Activity.RESULT_OK;
+import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -17,11 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.TasksUI.Task;
-import com.example.diarynotesapp.backend.DbHelperNotes;
+import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.ui.NoteActivity;
-import com.example.diarynotesapp.ui.TaskActivity;
 
 import java.util.List;
 
@@ -56,6 +58,7 @@ public class NotesAdapter extends
                 false);
         return new ViewHolder(itemView);
     }
+    ImageView imageView;
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
@@ -63,7 +66,7 @@ public class NotesAdapter extends
 
         Note item = items.get(position);
 
-        ImageView imageView = holder.imageView;
+        imageView = holder.imageView;
         TextView nameTextView = holder.nameTextView;
         TextView dateTextView = holder.dateTextView;
         TextView notesTextView = holder.notesTextView;
@@ -77,15 +80,52 @@ public class NotesAdapter extends
         String noteId = item.getId()+"";
 
         Button favBtn = holder.favBtn;
-        favBtn.setBackgroundColor(R.color.md_theme_light_primary);
+        favBtn.setTextColor(R.color.md_theme_light_primary);
         if(item.getFavourite().equals("Favourited")){
-            favBtn.setBackgroundColor(Color.YELLOW);
+            favBtn.setTextColor(Color.RED);
         }
-        imageView.setImageURI(Uri.parse(imageUrl));
+
+
         nameTextView.setText(name);
         dateTextView.setText(date);
         notesTextView.setText(notes);
         noteIdTextView.setText(noteId);
+        imageChooser();
+
+    }
+    int SELECT_PICTURE = 200;
+    void imageChooser() {
+
+        // create an instance of the
+        // intent of the type image
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+
+        // pass the constant to compare it
+        // with the returned requestCode
+
+        //startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
+    }
+    // this function is triggered when user
+    // selects the image from the imageChooser
+    //@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+
+            // compare the resultCode with the
+            // SELECT_PICTURE constant
+            if (requestCode == SELECT_PICTURE) {
+                // Get the url of the image from data
+                Uri selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                    // update the preview image in the layout
+                    imageView.setImageURI(selectedImageUri);
+                }
+            }
+        }
     }
     @Override
     public int getItemCount() {
@@ -116,7 +156,7 @@ public class NotesAdapter extends
                     itemView.findViewById(R.id.date_update);
             notesTextView = (TextView)
                     itemView.findViewById(R.id.notes);
-            imageView = (ImageView) itemView.findViewById(R.id.image_id);
+            imageView = (ImageView) itemView.findViewById(R.id.image_field);
             noteIdTextView = (TextView)
                     itemView.findViewById(R.id.noteId);
             favBtn = itemView.findViewById(R.id.favouriteBtn);
@@ -138,7 +178,7 @@ public class NotesAdapter extends
                 public void onClick(View v) {
 
                     int id = Integer.parseInt(noteIdTextView.getText().toString());
-                    DbHelperNotes dbHelperNotes = new DbHelperNotes(v.getContext());
+                    DbHelperTasks dbHelperNotes = new DbHelperTasks(v.getContext());
                     Note note = dbHelperNotes.getNoteById(id);
 
 
@@ -172,7 +212,7 @@ public class NotesAdapter extends
                 public void onClick(View v) {
                     System.out.println("Clicked Delete");
                     int pos = getAdapterPosition(); // position of card in recycler view list
-                    DbHelperNotes dbHelperNotes = new DbHelperNotes(v.getContext());
+                    DbHelperTasks dbHelperNotes = new DbHelperTasks(v.getContext());
                     long removeId = items.get(pos).getId();
 
                     dbHelperNotes.removeNoteById(removeId);

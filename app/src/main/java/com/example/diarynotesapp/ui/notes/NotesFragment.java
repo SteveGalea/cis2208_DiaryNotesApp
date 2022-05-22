@@ -19,14 +19,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.diarynotesapp.NotesUI.Note;
-import com.example.diarynotesapp.NotesUI.NotesAdapter;
+import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
+import com.example.diarynotesapp.recyclerviewUI.NotesUI.NotesAdapter;
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.TasksUI.Task;
-import com.example.diarynotesapp.TasksUI.TasksAdapter;
 import com.example.diarynotesapp.databinding.FragmentNotesBinding;
 import com.example.diarynotesapp.ui.NoteActivity;
-import com.example.diarynotesapp.ui.TaskActivity;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;

@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.TasksUI.Task;
-import com.example.diarynotesapp.TasksUI.TasksAdapter;
+import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
+import com.example.diarynotesapp.recyclerviewUI.TasksUI.TasksAdapter;
 import com.example.diarynotesapp.databinding.FragmentTasksBinding;
 import com.example.diarynotesapp.ui.TaskActivity;
 import com.example.diarynotesapp.ui.home.HomeViewModel;

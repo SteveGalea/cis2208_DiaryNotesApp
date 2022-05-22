@@ -1,11 +1,12 @@
 package com.example.diarynotesapp.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,14 +15,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.diarynotesapp.NotesUI.Note;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.diarynotesapp.ImageResizer;
+import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.TasksUI.Task;
-import com.example.diarynotesapp.backend.DbHelperNotes;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.Serializable;
 
 public class NoteActivity extends AppCompatActivity {
@@ -37,13 +43,33 @@ public class NoteActivity extends AppCompatActivity {
     Button saveButton;
     EditText noteTitle;
     EditText notesText;
-    Uri fetchedImageUri;
+    Bitmap fetchedImageUri;
 
     // constant to compare
     // the activity result code
     int SELECT_PICTURE = 200;
+    int RESULT_LOAD_IMG = 1;
 
     TextInputLayout tilNoteTitle,tilNoteText;
+
+    public String BitMapToString(Bitmap bitmap){
+
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+    public Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +96,12 @@ public class NoteActivity extends AppCompatActivity {
             int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
             if (userId != -2) {
 
-                DbHelperNotes db = new DbHelperNotes(this);
+                DbHelperTasks db = new DbHelperTasks(this);
                 Note item = db.getNoteById(userId);
                 noteTitle.setText(item.getTitle());
                 notesText.setText(item.getNoteText());
-                previewImage.setImageURI(Uri.parse(item.getImageURL()));
+                previewImage.setImageBitmap(StringToBitMap(item.getImageURL()));
+                //previewImage.setImageURI(item.getImageURL());
             }
         }
 
@@ -91,7 +118,11 @@ public class NoteActivity extends AppCompatActivity {
         selectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageChooser();
+
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+                //imageChooser();
             }
         });
 
@@ -128,15 +159,40 @@ public class NoteActivity extends AppCompatActivity {
 
             // compare the resultCode with the
             // SELECT_PICTURE constant
-            if (requestCode == SELECT_PICTURE) {
+            if (requestCode == SELECT_PICTURE+1) {
                 // Get the url of the image from data
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
                     // update the preview image in the layout
                     previewImage.setImageURI(selectedImageUri);
-                    fetchedImageUri = selectedImageUri;
+                    //fetchedImageUri = selectedImageUri;
                 }
             }
+            if (requestCode == RESULT_LOAD_IMG) {
+                try {
+                    final Uri imageUri = data.getData();
+                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    fetchedImageUri = selectedImage;
+                    previewImage.setImageBitmap(selectedImage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+            }/*
+            if (requestCode == SELECT_PICTURE) {
+                try {
+                    final Uri imageUri = data.getData();
+                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    previewImage.setImageBitmap(selectedImage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+            }*/
         }
     }
 
@@ -149,7 +205,7 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        DbHelperNotes db = new DbHelperNotes(this);
+        DbHelperTasks db = new DbHelperTasks(this);
         int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
         switch (item.getItemId()) {
             // action with ID action_refresh was selected
@@ -191,6 +247,8 @@ public class NoteActivity extends AppCompatActivity {
         /*if(!validateTaskName() | !validateTaskDetails() | !validateDate() | !validateSlider()){
             return;
         }*/
+        Bitmap fullsizedImage = fetchedImageUri;
+        Bitmap resizedImage = ImageResizer.reduceBitmapSize(fullsizedImage, 240000);
 
         Note note;
         if (getIntent().getStringExtra("NoteActivity").equals("Add"))
@@ -199,9 +257,9 @@ public class NoteActivity extends AppCompatActivity {
                     -1,
                     noteTitleValue,
                     notesTextValue,
-                    fetchedImageUri.toString(),
+                    BitMapToString(resizedImage),
                     "");
-            DbHelperNotes dbHelperNotes = new DbHelperNotes(this);
+            DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
 
             long id = dbHelperNotes.insertNote(note);
 
@@ -218,9 +276,9 @@ public class NoteActivity extends AppCompatActivity {
                         userId,
                         noteTitleValue,
                         notesTextValue,
-                        fetchedImageUri.toString(),
+                        BitMapToString(resizedImage),
                         "");
-                DbHelperNotes dbHelperNotes = new DbHelperNotes(this);
+                DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
                 dbHelperNotes.updateNoteById(note);
 
                 _result.putExtra("Edit Note", (Serializable) note);
@@ -229,9 +287,9 @@ public class NoteActivity extends AppCompatActivity {
                         -1,
                         noteTitleValue,
                         notesTextValue,
-                        fetchedImageUri.toString(),
+                        BitMapToString(resizedImage),
                         "");
-                DbHelperNotes dbHelperNotes = new DbHelperNotes(this);
+                DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
 
                 long id = dbHelperNotes.insertNote(note);
                 _result.putExtra("Add Note", (Serializable) note);
