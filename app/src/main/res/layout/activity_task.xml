@@ -133,7 +133,6 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sliderArea"
-                style="?attr/textInputOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="Slider"
@@ -145,6 +144,7 @@
                     android:id="@+id/show_progress_percentage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:layout_gravity="center"
                     android:clickable="false"
                     android:cursorVisible="false"
@@ -174,6 +174,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_baseline_check_24"
+                android:drawableTint="@color/cardview_light_background"
                 android:text="Save"
                 tools:ignore="MissingConstraints" />
 

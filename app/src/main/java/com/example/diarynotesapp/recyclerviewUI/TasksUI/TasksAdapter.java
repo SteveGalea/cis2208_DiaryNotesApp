@@ -157,7 +157,7 @@ public class TasksAdapter extends
                         actionBtn.setText("Archive");
                     }
                     dbHelperTasks.updateTaskById(task);
-
+                    dbHelperTasks.close();
                 }
             });
             editBtn.setOnClickListener(new View.OnClickListener(){
@@ -170,6 +170,7 @@ public class TasksAdapter extends
                     v.getContext().startActivity(intent);
 
                     notifyDataSetChanged();
+
                 }
             });
             deleteBtn.setOnClickListener(new View.OnClickListener(){
@@ -179,17 +180,10 @@ public class TasksAdapter extends
                     int pos = getAdapterPosition(); // position of card in recycler view list
                     DbHelperTasks dbHelperTasks = new DbHelperTasks(v.getContext());
                     long removeId = items.get(pos).getId();
-
-                    /*if(getItemCount()> 0) {
-                        long removeId = items.get(pos).getId();
-                        if (removeId <= getItemCount()) {
-                            System.out.println("Removed: ");
-                        }
-
-                    }*/
                     dbHelperTasks.removeTaskById(removeId);
                     items.remove(items.get(pos));
                     notifyDataSetChanged();
+                    dbHelperTasks.close();
                 }
             });
         }

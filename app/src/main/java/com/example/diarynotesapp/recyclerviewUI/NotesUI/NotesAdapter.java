@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.ui.NoteActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -94,9 +96,10 @@ public class NotesAdapter extends
         String noteId = item.getId()+"";
 
         Button favBtn = holder.favBtn;
-        favBtn.setTextColor(R.color.md_theme_light_primary);
         if(item.getFavourite().equals("Favourites")){
-            favBtn.setTextColor(R.color.md_theme_light_error);
+            favBtn.setText("Undo");
+        }else{
+            favBtn.setText("Favourites");
         }
         if(!imageUrl.equals("")) {
             imageViewCard.setImageBitmap(StringToBitMap(item.getImageURL()));
@@ -105,7 +108,7 @@ public class NotesAdapter extends
         dateTextView.setText(date);
         notesTextView.setText(notes);
         noteIdTextView.setText(noteId);
-        favBtn.performClick();
+        //favBtn.performClick();
 
     }
 
@@ -120,6 +123,7 @@ public class NotesAdapter extends
         }
         return items.size();
     }
+
 
     // method for filtering our recyclerview items.
     public void filterList(ArrayList<Note> filterlist) {
@@ -163,7 +167,6 @@ public class NotesAdapter extends
 
             });
             favBtn.setOnClickListener(new View.OnClickListener(){
-                @SuppressLint("ResourceAsColor")
                 @Override
                 public void onClick(View v) {
 
@@ -175,13 +178,18 @@ public class NotesAdapter extends
 
 
                     if(note.getFavourite().equals("Favourites")){
-                        favBtn.setText("Unfavourite");
+                        favBtn.setText("Undo");
                         note.setFavourite("");
+                        Toast.makeText(v.getContext(), note.getTitle()+" Added to Favourites", Toast.LENGTH_SHORT)
+                                .show();
                     }else if(note.getFavourite().equals("")){
                         favBtn.setText("Favourite");
                         note.setFavourite("Favourites");
+                        Toast.makeText(v.getContext(), note.getTitle()+" Removed from Favourites", Toast.LENGTH_SHORT)
+                                .show();
                     }
                     dbHelperNotes.updateNoteById(note);
+                    dbHelperNotes.close();
 
                 }
             });
@@ -192,6 +200,8 @@ public class NotesAdapter extends
                 public void onClick(View v) {
                     int id = Integer.parseInt(noteIdTextView.getText().toString());
                     Intent intent = new Intent(v.getContext(), NoteActivity.class);
+                    Toast.makeText(v.getContext(), "Editing "+id, Toast.LENGTH_LONG).show();
+
                     intent.putExtra("ID", id);
                     intent.putExtra("NoteActivity", "Edit");
                     v.getContext().startActivity(intent);
@@ -199,11 +209,13 @@ public class NotesAdapter extends
                     //set edit details
 
                     notifyDataSetChanged();
+
                 }
             });
             deleteBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
+
                     System.out.println("Clicked Delete");
                     int pos = getAdapterPosition(); // position of card in recycler view list
                     DbHelperTasks dbHelperNotes = new DbHelperTasks(v.getContext());
@@ -212,6 +224,7 @@ public class NotesAdapter extends
                     dbHelperNotes.removeNoteById(removeId);
                     items.remove(items.get(pos));
                     notifyDataSetChanged();
+                    dbHelperNotes.close();
                 }
             });
         }

@@ -74,7 +74,11 @@ public class Note implements Serializable {
         this._favourite = _favourite;
     }
 
+    public void setDate(String _date){
+        this._date = _date;
+    }
+
     public String getDate() {
-        return (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")).format(new Date());
+        return _date;
     }
 }

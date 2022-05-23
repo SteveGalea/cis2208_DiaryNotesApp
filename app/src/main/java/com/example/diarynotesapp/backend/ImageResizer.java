@@ -1,4 +1,4 @@
-package com.example.diarynotesapp;
+package com.example.diarynotesapp.backend;
 
 import android.graphics.Bitmap;
 import android.util.Log;

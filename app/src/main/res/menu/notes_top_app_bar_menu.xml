@@ -11,6 +11,8 @@
         android:contentDescription="Remove this note"
         android:iconTint="@color/md_theme_light_tertiary"
         app:showAsAction="ifRoom" />
+
+
     <item
         android:id="@+id/save"
         android:title="Save Note"

@@ -114,6 +114,7 @@ public class TaskActivity extends AppCompatActivity {
                     progress = Float.parseFloat(item.getProgress());
                 }
                 slider.setValue(progress);
+                db.close();
             }
         }
         //instantiate
@@ -310,7 +311,7 @@ public class TaskActivity extends AppCompatActivity {
 
                 _result.putExtra("Deleted Task", userId);
 
-
+                db.close();
                 setResult(Activity.RESULT_OK, _result);
                 finish();
                 break;
@@ -318,6 +319,7 @@ public class TaskActivity extends AppCompatActivity {
 
                 Toast.makeText(this, "Attempting to save task", Toast.LENGTH_SHORT)
                         .show();
+                db.close();
                 this.onClickSave();
 
                 break;
@@ -353,7 +355,7 @@ public class TaskActivity extends AppCompatActivity {
             DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
 
             long id = dbHelperTasks.insertTask(task);
-
+            dbHelperTasks.close();
             _result.putExtra("Add Task", (Serializable) task);
 
         }
@@ -371,7 +373,7 @@ public class TaskActivity extends AppCompatActivity {
                         "Pending");
                 DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
                 dbHelperTasks.updateTaskById(task);
-
+                dbHelperTasks.close();
                 _result.putExtra("Edit Task", (Serializable) task);
             }else{
                 task = new Task(
@@ -382,7 +384,7 @@ public class TaskActivity extends AppCompatActivity {
                         mShowSelectedDateText.getText().toString(),
                         "Pending");
                 DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
-
+                dbHelperTasks.close();
                 long id = dbHelperTasks.insertTask(task);
                 _result.putExtra("Add Task", (Serializable) task);
 

@@ -61,7 +61,6 @@ public class DbHelperTasks extends SQLiteOpenHelper {
     private void createTables(SQLiteDatabase db){
         db.execSQL(createTaskTable());
         db.execSQL(createNoteTable());
-
     }
     private String createTaskTable() {
         return "CREATE TABLE "+ TaskDb.TaskEntry.TABLE_NAME+" ("+TaskDb.TaskEntry._ID+ " INTEGER PRIMARY KEY, " + _name + " varchar, "+_details + " varchar, "+_dueDate+ " varchar, "+ _progress + " varchar, "+ _flag + " varchar)";
@@ -84,6 +83,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         db.execSQL(dropTaskTable());
         db.execSQL(dropNoteTable());
         onCreate(db);
+        db.close();
     }
     //insert
     public long insertTask(Task task) {
@@ -96,6 +96,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         values.put(_flag, task.getFlag());
         long id = db.insert(TaskDb.TaskEntry.TABLE_NAME, null,
                 values);
+        db.close();
         return id;
     }
     public long insertNote(Note note) {
@@ -108,6 +109,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         values.put(_date, note.getDate());
         long id = db.insert(NoteDb.NoteEntry.TABLE_NAME, null,
                 values);
+        db.close();
         return id;
     }
     public String BitMapToString(Bitmap bitmap){
@@ -141,7 +143,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         values.put(_progress, task.getProgress());
         values.put(_flag, task.getFlag());
         db.update(TaskDb.TaskEntry.TABLE_NAME,  values, "_id =?", new String[]{String.valueOf(task.getId())});
-
+        db.close();
     }
 
     public void updateNoteById(Note note) {
@@ -153,6 +155,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         values.put(_favourite, note.getFavourite());
         values.put(_date, note.getDate());
         db.update(NoteDb.NoteEntry.TABLE_NAME,  values, "_id =?", new String[]{String.valueOf(note.getId())});
+        db.close();
     }
 
     //get all
@@ -189,6 +192,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
             tasks.add(task);
         }
         cursor.close();
+        db.close();
         return tasks;
     }
 
@@ -226,6 +230,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
             notes.add(note);
         }
         cursor.close();
+        db.close();
         return notes;
     }
 
@@ -272,9 +277,9 @@ public class DbHelperTasks extends SQLiteOpenHelper {
             }
         }
         cursor.close();
+        db.close();
         return task;
     }
-
 
     public Note getNoteById(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -288,29 +293,35 @@ public class DbHelperTasks extends SQLiteOpenHelper {
         };
         // Filter results WHERE "id" = condition
         String selection = BaseColumns._ID + " = ?";
-        String[] selectionArgs = {Long.toString(id)};
+        System.out.println("id: "+id);
+        String[] selectionArgs = {id+""};
         // How you want the results sorted in the resulting Cursor
-        String sortOrder = _date + " ASC";
+        String sortOrder = BaseColumns._ID;
         Cursor cursor = db.query(
                 NoteDb.NoteEntry.TABLE_NAME, // The table to query
                 projection, // The array of columns to return (pass null to get all)
-                null, // The columns for the WHERE clause
-                null, // The values for the WHERE clause
+                selection, // The columns for the WHERE clause
+                selectionArgs, // The values for the WHERE clause
                 null, // don't group the rows
                 null, // don't filter by row groups
                 sortOrder // The sort order
         );
         Note note = null;
         while (cursor.moveToNext()) {
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(_title));
-            String noteText = cursor.getString(cursor.getColumnIndexOrThrow(_noteText));
-            String imageURL = cursor.getString(cursor.getColumnIndexOrThrow(_imageURL));
-            String favourite = cursor.getString(cursor.getColumnIndexOrThrow(_favourite));
-            String dateDB = cursor.getString(cursor.getColumnIndexOrThrow(_date));
+            long cid = cursor.getLong(cursor.getColumnIndexOrThrow(_id));
+            System.out.println("Checking: "+id);
+            if(cid == id) {
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(_title));
+                String noteText = cursor.getString(cursor.getColumnIndexOrThrow(_noteText));
+                String imageURL = cursor.getString(cursor.getColumnIndexOrThrow(_imageURL));
+                String favourite = cursor.getString(cursor.getColumnIndexOrThrow(_favourite));
+                String dateDB = cursor.getString(cursor.getColumnIndexOrThrow(_date));
 
-            note = new Note(id, title, noteText, imageURL, favourite, dateDB);
+                note = new Note(id, title, noteText, imageURL, favourite, dateDB);
+            }
         }
         cursor.close();
+        db.close();
         return note;
     }
 

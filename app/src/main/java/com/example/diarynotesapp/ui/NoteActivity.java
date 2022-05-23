@@ -1,5 +1,6 @@
 package com.example.diarynotesapp.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,7 +21,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.diarynotesapp.ImageResizer;
+import com.example.diarynotesapp.backend.ImageResizer;
 import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.backend.DbHelperTasks;
@@ -36,25 +37,23 @@ import java.io.Serializable;
 public class NoteActivity extends AppCompatActivity {
 
     //declarations
-    MaterialToolbar topAppBar;
-    // One Button
-    Button selectImage;
+    private MaterialToolbar topAppBar;
+    private Button selectImage;
+    private ImageView previewImage;
 
-    // One Preview Image
-    ImageView previewImage;
+    private Button saveButton;
+    private EditText noteTitle;
+    private EditText notesText;
+    private Bitmap fetchedImageUri;
+    private String favouriteValue;
 
-    Button saveButton;
-    EditText noteTitle;
-    EditText notesText;
-    Bitmap fetchedImageUri;
-
-    TextInputLayout tilNoteTitle,tilNoteText, tilImageText;
+    private TextInputLayout tilNoteTitle, tilNoteText, tilImageText;
 
     //initialisation
-    int RESULT_LOAD_IMG = 1;
+    private int RESULT_LOAD_IMG = 1;
 
 
-    //essential methods
+    //essential key methods
     public String BitMapToString(Bitmap bitmap){
 
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
@@ -73,6 +72,8 @@ public class NoteActivity extends AppCompatActivity {
             return null;
         }
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +106,10 @@ public class NoteActivity extends AppCompatActivity {
         });
 
         if (getIntent().getStringExtra("NoteActivity").equals("Edit")) {
+
             int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
+            Toast.makeText(this, "Id received "+ userId, Toast.LENGTH_LONG).show();
+
             if (userId != -2) {
 
                 DbHelperTasks db = new DbHelperTasks(this);
@@ -113,7 +117,10 @@ public class NoteActivity extends AppCompatActivity {
                 noteTitle.setText(item.getTitle());
                 notesText.setText(item.getNoteText());
                 previewImage.setImageBitmap(StringToBitMap(item.getImageURL()));
-                //previewImage.setImageURI(item.getImageURL());
+                favouriteValue = item.getFavourite();
+                System.out.println(item.getTitle());
+                System.out.println(item.getNoteText());
+                db.close();
             }
         }
         // handle the Choose Image button to trigger
@@ -124,6 +131,7 @@ public class NoteActivity extends AppCompatActivity {
 
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
+
                 startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
                 //imageChooser();
             }
@@ -135,7 +143,8 @@ public class NoteActivity extends AppCompatActivity {
                 onClickSave();
             }
         });
-        //addvalidations listeners
+
+        //add validations listeners
         tilNoteText.getEditText().addTextChangedListener(new TextWatcher() {
 
 
@@ -174,7 +183,6 @@ public class NoteActivity extends AppCompatActivity {
                 validateNoteText();
             }
         });
-
 
     }
 
@@ -249,7 +257,6 @@ public class NoteActivity extends AppCompatActivity {
                 }
 
             }
-
     }
 
 
@@ -259,6 +266,7 @@ public class NoteActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         DbHelperTasks db = new DbHelperTasks(this);
@@ -273,14 +281,17 @@ public class NoteActivity extends AppCompatActivity {
 
                 _result.putExtra("Deleted Note", userId);
 
-
+                db.close();
                 setResult(Activity.RESULT_OK, _result);
+
                 finish();
                 break;
+
             case R.id.save:
 
                 Toast.makeText(this, "Attempting to save task", Toast.LENGTH_SHORT)
                         .show();
+                db.close();
                 this.onClickSave();
 
                 break;
@@ -317,11 +328,11 @@ public class NoteActivity extends AppCompatActivity {
                     noteTitleValue,
                     notesTextValue,
                     BitMapToString(resizedImage),
-                    "");
+                    favouriteValue);
             DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
 
             long id = dbHelperNotes.insertNote(note);
-
+            dbHelperNotes.close();
             _result.putExtra("Add Note", (Serializable) note);
 
         }
@@ -336,10 +347,10 @@ public class NoteActivity extends AppCompatActivity {
                         noteTitleValue,
                         notesTextValue,
                         BitMapToString(resizedImage),
-                        "");
+                        favouriteValue);
                 DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
                 dbHelperNotes.updateNoteById(note);
-
+                dbHelperNotes.close();
                 _result.putExtra("Edit Note", (Serializable) note);
             }else{
                 note = new Note(
@@ -347,10 +358,11 @@ public class NoteActivity extends AppCompatActivity {
                         noteTitleValue,
                         notesTextValue,
                         BitMapToString(resizedImage),
-                        "");
+                        favouriteValue);
                 DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
 
                 long id = dbHelperNotes.insertNote(note);
+                dbHelperNotes.close();
                 _result.putExtra("Add Note", (Serializable) note);
 
             }

@@ -16,7 +16,7 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBarNotes"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         app:title="Notes"
         app:menu="@menu/notes_top_app_bar_menu"
         app:navigationIconTint="@color/md_theme_light_error"
@@ -24,142 +24,138 @@
 
   </com.google.android.material.appbar.AppBarLayout>
 
-  <androidx.core.widget.NestedScrollView
-      android:layout_width="match_parent"
-      android:layout_height="fill_parent"
-      android:orientation="vertical"
-      android:paddingTop="?attr/actionBarSize"
-      tools:ignore="MissingConstraints">
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
-            style="?attr/textInputOutlinedStyle"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/note_title"
-            app:counterEnabled="true"
-            app:counterMaxLength="50"
-            android:maxLines="1"
-            app:endIconContentDescription="Clear Content"
-            app:endIconMode="clear_text"
-            app:helperText="Input your text"
-            android:padding="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/notes_app_bar"
-            tools:ignore="MissingConstraints">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/noteTitle"
-              android:drawableLeft="@drawable/ic_baseline_edit_24"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textField"
+                style="?attr/textInputOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/note_title"
+                android:maxLines="1"
+                android:padding="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:endIconContentDescription="Clear Content"
+                app:endIconMode="clear_text"
+                app:helperText="Input your text"
+                app:layout_constraintTop_toBottomOf="@+id/notes_app_bar"
+                tools:ignore="MissingConstraints">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/noteTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_baseline_edit_24" />
 
-        <View
-            android:id="@+id/lineBreak2"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#000000"
-            />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/detailsField"
-            style="?attr/textInputOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="\tNotes"
-            app:counterEnabled="true"
-            app:counterMaxLength="9999"
-            app:endIconContentDescription="Clear Content"
-            app:endIconMode="clear_text"
-            app:helperText="Input text"
-            android:padding="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/textField"
-            tools:ignore="MissingConstraints">
+            <View
+                android:id="@+id/lineBreak2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000" />
 
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/notesText"
-              android:drawableLeft="@drawable/ic_baseline_assignment_24"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/detailsField"
+                style="?attr/textInputOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="\tNotes"
+                android:padding="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="9999"
+                app:endIconContentDescription="Clear Content"
+                app:endIconMode="clear_text"
+                app:helperText="Input text"
+                app:layout_constraintTop_toBottomOf="@+id/textField"
+                tools:ignore="MissingConstraints">
 
-        <View
-            android:id="@+id/lineBreak3"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#000000"
-            />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/notesText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_baseline_assignment_24" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/selectImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select Image"
-            android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_baseline_image_24"
-            android:drawableTint="@color/design_default_color_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/notes_image"
-            tools:ignore="MissingConstraints" />
+            <View
+                android:id="@+id/lineBreak3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000" />
 
-        <ImageView
-            android:id="@+id/notes_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:padding="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/detailsField"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            tools:ignore="MissingConstraints" />
+            <Button
+                android:id="@+id/selectImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_baseline_image_24"
+                android:drawableTint="@color/design_default_color_background"
+                android:text="Select Image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notes_image"
+                tools:ignore="MissingConstraints" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/imageError"
-            style="?attr/textInputOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:hint="Has an image been Inputted?"
-            android:padding="20dp"
-            app:helperText="Input your image"
-            tools:ignore="MissingConstraints">
+            <ImageView
+                android:id="@+id/notes_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:padding="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/detailsField"
+                tools:ignore="MissingConstraints" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:cursorVisible="false"
-            android:editable="false"
-            />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/imageError"
+                style="?attr/textInputOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:hint="Has an image been Inputted?"
+                android:padding="20dp"
+                app:helperText="Input your image"
+                tools:ignore="MissingConstraints">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cursorVisible="false"
+                    android:editable="false"
+                    android:focusable="false" />
 
-        <View
-            android:id="@+id/lineBreak4"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#000000"
-            />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:id="@+id/lineBreak4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000" />
 
 
-        <Button
-            android:id="@+id/saveBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_baseline_check_24"
-            android:drawableTint="@color/design_default_color_background"
-            android:text="Save"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/notes_image"
-            tools:ignore="MissingConstraints" />
-    </LinearLayout>
-  </androidx.core.widget.NestedScrollView>
+            <Button
+                android:id="@+id/saveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_baseline_check_24"
+                android:drawableTint="@color/design_default_color_background"
+                android:text="Save"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notes_image"
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

@@ -1,7 +1,7 @@
 package com.example.diarynotesapp.ui.notes;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,8 +9,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +30,6 @@ import com.example.diarynotesapp.ui.NoteActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +41,7 @@ public class NotesFragment extends Fragment {
     private NotesAdapter adapter;
     private RecyclerView notesView;
     private TextInputEditText searchTextInput;
-    private Chip favourites;
+    private Chip favourites, refresh;
     private boolean favFilter = false;
     private ArrayList<Note> notes = new ArrayList<>();
 
@@ -93,18 +90,28 @@ public class NotesFragment extends Fragment {
         notesView = root.findViewById(R.id.notes_list);
         favourites = root.findViewById(R.id.favouriteChip);
         favourites.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
-                if(favFilter)
+                resetRecyclerView();
+                if(favourites.isChecked())
                 {
-                    handleChip(favFilter);
+                    handleFavouritesChip(favFilter);
                     favFilter = false;
                 }else{
-                    handleChip(favFilter);
+                    handleFavouritesChip(favFilter);
                     favFilter = true;
                 }
 
 
+            }
+
+        });
+        refresh = root.findViewById(R.id.refreshChip);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetRecyclerView();
             }
 
         });
@@ -153,10 +160,11 @@ public class NotesFragment extends Fragment {
             // at last we are passing that filtered
             // list to our adapter class.
             adapter.filterList(filteredlist);
+            //updateNotesList(filteredlist);
         }
     }
 
-    private void handleChip(boolean value) {
+    private void handleFavouritesChip(boolean value) {
         // creating a new array list to filter our data.
         ArrayList<Note> filteredlist = new ArrayList<>();
 
@@ -168,6 +176,7 @@ public class NotesFragment extends Fragment {
                 if (item.getFavourite().toLowerCase().contains(compareElem.toLowerCase())) {
                     // if the item is matched we are
                     // adding it to our filtered list.
+                    System.out.println(item.getTitle()+": "+item.getFavourite()+"");
                     filteredlist.add(item);
                     Toast.makeText(this.getContext(), "Filtered by filter click!", Toast.LENGTH_SHORT).show();
                 }
@@ -178,6 +187,8 @@ public class NotesFragment extends Fragment {
         // running a for loop to compare elements.
 
         adapter.filterList(filteredlist);
+
+        //updateNotesList(filteredlist);
 
     }
     @Override
