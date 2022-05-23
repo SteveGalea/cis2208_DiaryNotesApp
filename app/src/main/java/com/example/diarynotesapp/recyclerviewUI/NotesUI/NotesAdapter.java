@@ -1,16 +1,11 @@
 package com.example.diarynotesapp.recyclerviewUI.NotesUI;
 
 
-import static android.app.Activity.RESULT_OK;
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
-import com.example.diarynotesapp.backend.DbHelperTasks;
+import com.example.diarynotesapp.backend.DbHelper;
 import com.example.diarynotesapp.ui.NoteActivity;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -179,7 +172,7 @@ public class NotesAdapter extends
                 public void onClick(View v) {
 
                     int id = Integer.parseInt(noteIdTextView.getText().toString());
-                    DbHelperTasks dbHelperNotes = new DbHelperTasks(v.getContext());
+                    DbHelper dbHelperNotes = new DbHelper(v.getContext());
                     Note note = dbHelperNotes.getNoteById(id);
 
 
@@ -226,7 +219,7 @@ public class NotesAdapter extends
 
                     System.out.println("Clicked Delete");
                     int pos = getAdapterPosition(); // position of card in recycler view list
-                    DbHelperTasks dbHelperNotes = new DbHelperTasks(v.getContext());
+                    DbHelper dbHelperNotes = new DbHelper(v.getContext());
                     long removeId = items.get(pos).getId();
 
                     dbHelperNotes.removeNoteById(removeId);

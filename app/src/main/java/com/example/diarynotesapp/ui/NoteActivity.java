@@ -24,7 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.diarynotesapp.backend.ImageResizer;
 import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.backend.DbHelperTasks;
+import com.example.diarynotesapp.backend.DbHelper;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -112,7 +112,7 @@ public class NoteActivity extends AppCompatActivity {
 
             if (userId != -2) {
 
-                DbHelperTasks db = new DbHelperTasks(this);
+                DbHelper db = new DbHelper(this);
                 Note item = db.getNoteById(userId);
                 noteTitle.setText(item.getTitle());
                 notesText.setText(item.getNoteText());
@@ -269,7 +269,7 @@ public class NoteActivity extends AppCompatActivity {
     @SuppressLint("ResourceAsColor")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        DbHelperTasks db = new DbHelperTasks(this);
+        DbHelper db = new DbHelper(this);
         int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
         switch (item.getItemId()) {
             // action with ID action_refresh was selected
@@ -329,7 +329,7 @@ public class NoteActivity extends AppCompatActivity {
                     notesTextValue,
                     BitMapToString(resizedImage),
                     favouriteValue);
-            DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
+            DbHelper dbHelperNotes = new DbHelper(this);
 
             long id = dbHelperNotes.insertNote(note);
             dbHelperNotes.close();
@@ -348,7 +348,7 @@ public class NoteActivity extends AppCompatActivity {
                         notesTextValue,
                         BitMapToString(resizedImage),
                         favouriteValue);
-                DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
+                DbHelper dbHelperNotes = new DbHelper(this);
                 dbHelperNotes.updateNoteById(note);
                 dbHelperNotes.close();
                 _result.putExtra("Edit Note", (Serializable) note);
@@ -359,7 +359,7 @@ public class NoteActivity extends AppCompatActivity {
                         notesTextValue,
                         BitMapToString(resizedImage),
                         favouriteValue);
-                DbHelperTasks dbHelperNotes = new DbHelperTasks(this);
+                DbHelper dbHelperNotes = new DbHelper(this);
 
                 long id = dbHelperNotes.insertNote(note);
                 dbHelperNotes.close();

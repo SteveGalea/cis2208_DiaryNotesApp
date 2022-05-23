@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
-import com.example.diarynotesapp.backend.DbHelperTasks;
+import com.example.diarynotesapp.backend.DbHelper;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -101,7 +101,7 @@ public class TaskActivity extends AppCompatActivity {
             int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
             if (userId != -2) {
 
-                DbHelperTasks db = new DbHelperTasks(this);
+                DbHelper db = new DbHelper(this);
                 Task item = db.getTaskById(userId);
                 taskName.setText(item.getName());
                 taskDetails.setText(item.getDetails());
@@ -299,7 +299,7 @@ public class TaskActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        DbHelperTasks db = new DbHelperTasks(this);
+        DbHelper db = new DbHelper(this);
         int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
         switch (item.getItemId()) {
             // action with ID action_refresh was selected
@@ -352,10 +352,10 @@ public class TaskActivity extends AppCompatActivity {
                     sliderValue,
                     mShowSelectedDateText.getText().toString(),
                     "Pending");
-            DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
+            DbHelper dbHelper = new DbHelper(this);
 
-            long id = dbHelperTasks.insertTask(task);
-            dbHelperTasks.close();
+            long id = dbHelper.insertTask(task);
+            dbHelper.close();
             _result.putExtra("Add Task", (Serializable) task);
 
         }
@@ -371,9 +371,9 @@ public class TaskActivity extends AppCompatActivity {
                         sliderValue,
                         mShowSelectedDateText.getText().toString(),
                         "Pending");
-                DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
-                dbHelperTasks.updateTaskById(task);
-                dbHelperTasks.close();
+                DbHelper dbHelper = new DbHelper(this);
+                dbHelper.updateTaskById(task);
+                dbHelper.close();
                 _result.putExtra("Edit Task", (Serializable) task);
             }else{
                 task = new Task(
@@ -383,9 +383,9 @@ public class TaskActivity extends AppCompatActivity {
                         sliderValue,
                         mShowSelectedDateText.getText().toString(),
                         "Pending");
-                DbHelperTasks dbHelperTasks = new DbHelperTasks(this);
-                dbHelperTasks.close();
-                long id = dbHelperTasks.insertTask(task);
+                DbHelper dbHelper = new DbHelper(this);
+                dbHelper.close();
+                long id = dbHelper.insertTask(task);
                 _result.putExtra("Add Task", (Serializable) task);
 
             }

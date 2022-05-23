@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
-import com.example.diarynotesapp.backend.DbHelperTasks;
+import com.example.diarynotesapp.backend.DbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class NotesViewModel extends ViewModel {
         return mText;
     }
     public LiveData<List<Note>> getNotesMutable(Context context) {
-        DbHelperTasks dbHelper = new DbHelperTasks(context);
+        DbHelper dbHelper = new DbHelper(context);
         ArrayList<Note> notes= dbHelper.getNotes();
         notesMutable.setValue(notes);
         return notesMutable;

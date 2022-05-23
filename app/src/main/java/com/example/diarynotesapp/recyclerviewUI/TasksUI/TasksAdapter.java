@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.backend.DbHelperTasks;
+import com.example.diarynotesapp.backend.DbHelper;
 import com.example.diarynotesapp.ui.TaskActivity;
 
 import java.util.List;
@@ -144,8 +144,8 @@ public class TasksAdapter extends
                 public void onClick(View v) {
 
                     int id = Integer.parseInt(taskIdTextView.getText().toString());
-                    DbHelperTasks dbHelperTasks = new DbHelperTasks(v.getContext());
-                    Task task = dbHelperTasks.getTaskById(id);
+                    DbHelper dbHelper = new DbHelper(v.getContext());
+                    Task task = dbHelper.getTaskById(id);
 
                     if(task.getFlag().equals("Pending")){
                         task.setFlag("Complete");
@@ -156,8 +156,8 @@ public class TasksAdapter extends
                         titleTextView.setText("Task: "+task.getName());
                         actionBtn.setText("Archive");
                     }
-                    dbHelperTasks.updateTaskById(task);
-                    dbHelperTasks.close();
+                    dbHelper.updateTaskById(task);
+                    dbHelper.close();
                 }
             });
             editBtn.setOnClickListener(new View.OnClickListener(){
@@ -178,12 +178,12 @@ public class TasksAdapter extends
                 public void onClick(View v) {
                     System.out.println("Clicked Delete");
                     int pos = getAdapterPosition(); // position of card in recycler view list
-                    DbHelperTasks dbHelperTasks = new DbHelperTasks(v.getContext());
+                    DbHelper dbHelper = new DbHelper(v.getContext());
                     long removeId = items.get(pos).getId();
-                    dbHelperTasks.removeTaskById(removeId);
+                    dbHelper.removeTaskById(removeId);
                     items.remove(items.get(pos));
                     notifyDataSetChanged();
-                    dbHelperTasks.close();
+                    dbHelper.close();
                 }
             });
         }

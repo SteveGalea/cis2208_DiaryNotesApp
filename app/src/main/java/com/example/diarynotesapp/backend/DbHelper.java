@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-public class DbHelperTasks extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "appDb.db";
@@ -38,7 +38,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
     private final String _date = NoteDb.NoteEntry.COLUMN_NAME_DATE;
 
 
-    public DbHelperTasks(Context context) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

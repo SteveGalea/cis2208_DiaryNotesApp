@@ -9,9 +9,8 @@ import retrofit2.http.Path;
 
 public interface Api {
     String BASE_URL = "https://type.fit/api/";
-    //@Headers({"Cache-Control: max-age=640000", "User-Agent: My-App-Name"})
     @GET("quotes")
-    Call<List<Quote>> getQuotes();
+    Call<List<Quote>> getQuotes(); // gets all quotes
     @GET("quotes/{id}")
-    Call<Quote> getQuoteById(@Path("id") int id);
+    Call<Quote> getQuoteById(@Path("id") int id); // gets a quote by id
 }

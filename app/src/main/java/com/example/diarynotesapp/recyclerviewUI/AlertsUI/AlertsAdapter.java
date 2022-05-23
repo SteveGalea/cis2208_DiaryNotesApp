@@ -1,23 +1,17 @@
 package com.example.diarynotesapp.recyclerviewUI.AlertsUI;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.R;
-import com.example.diarynotesapp.backend.DbHelperTasks;
 import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
-import com.example.diarynotesapp.ui.TaskActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
