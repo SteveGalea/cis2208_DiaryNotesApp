@@ -46,11 +46,15 @@ public class NotesAdapter extends
 
     //essential methods
     public String BitMapToString(Bitmap bitmap){
-
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        String temp="";
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] b = baos.toByteArray();
+            temp = Base64.encodeToString(b, Base64.DEFAULT);
+        }catch(Exception e){
+            System.out.println("Caught"+e.getMessage());
+        }
         return temp;
     }
     public Bitmap StringToBitMap(String encodedString){
@@ -96,7 +100,11 @@ public class NotesAdapter extends
         String noteId = item.getId()+"";
 
         Button favBtn = holder.favBtn;
-        if(item.getFavourite().equals("Favourites")){
+        String compareItem = item.getFavourite();
+        if(compareItem == null){
+            compareItem="";
+        }
+        if(compareItem.equals("Favourites")){
             favBtn.setText("Undo");
         }else{
             favBtn.setText("Favourites");

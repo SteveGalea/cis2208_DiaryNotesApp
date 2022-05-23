@@ -173,7 +173,11 @@ public class NotesFragment extends Fragment {
             compareElem = "Favourites";
             for (Note item : notes) {
                 // checking if the entered string matched with any item of our recycler view.
-                if (item.getFavourite().toLowerCase().contains(compareElem.toLowerCase())) {
+                String compareFav = item.getFavourite();
+                if(compareFav == null){
+                    compareFav="";
+                }
+                if (compareFav.toLowerCase().contains(compareElem.toLowerCase())) {
                     // if the item is matched we are
                     // adding it to our filtered list.
                     System.out.println(item.getTitle()+": "+item.getFavourite()+"");

@@ -71,11 +71,11 @@ public class AlertsAdapter extends
 
 
         long computedDaysLeft
-                = (difference_In_Time
+                = 1+(difference_In_Time
                 / (1000 * 60 * 60 * 24))
                 % 365;
 
-        String title = item.getName()+" due in "+computedDaysLeft+" days";
+        String title = computedDaysLeft == 1? item.getName()+" due in "+computedDaysLeft+" day" : item.getName()+" due in "+computedDaysLeft+" days";
 
         String details = "Due Date "+item.getDateDue();
 

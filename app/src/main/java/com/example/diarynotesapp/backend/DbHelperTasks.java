@@ -171,7 +171,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
                 _flag
         };
         // How you want the results sorted in the resulting Cursor
-        String sortOrder = _dueDate + " ASC";
+        String sortOrder = _progress + " ASC";
         Cursor cursor = db.query(
                 TaskDb.TaskEntry.TABLE_NAME, // The table to query
                 projection, // The array of columns to return (pass null to get all)
@@ -208,7 +208,7 @@ public class DbHelperTasks extends SQLiteOpenHelper {
                 _date
         };
         // How you want the results sorted in the resulting Cursor
-        String sortOrder = _date + " ASC";
+        String sortOrder = _title + " ASC";
         Cursor cursor = db.query(
                 NoteDb.NoteEntry.TABLE_NAME, // The table to query
                 projection, // The array of columns to return (pass null to get all)
