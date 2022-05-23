@@ -44,7 +44,7 @@ public class NoteActivity extends AppCompatActivity {
     private Button saveButton;
     private EditText noteTitle;
     private EditText notesText;
-    private Bitmap fetchedImageUri;
+    private Bitmap fetchedImage;
     private String favouriteValue;
 
     private TextInputLayout tilNoteTitle, tilNoteText, tilImageText;
@@ -108,15 +108,16 @@ public class NoteActivity extends AppCompatActivity {
         if (getIntent().getStringExtra("NoteActivity").equals("Edit")) {
 
             int userId = getIntent().getIntExtra("ID", -2); // if not found, return -2
-            Toast.makeText(this, "Id received "+ userId, Toast.LENGTH_LONG).show();
 
             if (userId != -2) {
-
+                //ensuring user id returned is not default value
                 DbHelper db = new DbHelper(this);
                 Note item = db.getNoteById(userId);
+                Toast.makeText(this, "Editing note: "+item.getTitle(), Toast.LENGTH_LONG).show();
                 noteTitle.setText(item.getTitle());
                 notesText.setText(item.getNoteText());
-                previewImage.setImageBitmap(StringToBitMap(item.getImageURL()));
+                fetchedImage = StringToBitMap(item.getImageURL());
+                previewImage.setImageBitmap(fetchedImage);
                 favouriteValue = item.getFavourite();
                 System.out.println(item.getTitle());
                 System.out.println(item.getNoteText());
@@ -188,8 +189,8 @@ public class NoteActivity extends AppCompatActivity {
 
     // custom validation
     private boolean validateImage(){
-        if(fetchedImageUri == null){
-            tilImageText.setError("Image not selected! Select an image please.");
+        if(fetchedImage == null){
+            tilImageText.setError("Kindly reselect an image please.");
             tilImageText.getEditText().setText("Nope");
             return false;
         }
@@ -205,7 +206,7 @@ public class NoteActivity extends AppCompatActivity {
     private boolean validateNoteText() {
         String value = tilNoteText.getEditText().getText().toString().trim();
         if(value.isEmpty()){
-            tilNoteText.setError("Note Title Field can not be left empty!");
+            tilNoteText.setError("Note Text Field can not be left empty!");
             return false;
         }
         else if(value.length()>9999){
@@ -249,10 +250,14 @@ public class NoteActivity extends AppCompatActivity {
                     final Uri imageUri = data.getData();
                     final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    fetchedImageUri = selectedImage;
+                    fetchedImage = selectedImage;
                     previewImage.setImageBitmap(selectedImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+                finally {
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
 
@@ -317,7 +322,7 @@ public class NoteActivity extends AppCompatActivity {
         }
 
 
-        Bitmap fullsizedImage = fetchedImageUri;
+        Bitmap fullsizedImage = fetchedImage;
         Bitmap resizedImage = ImageResizer.reduceBitmapSize(fullsizedImage, 240000);
 
         Note note;

@@ -38,7 +38,6 @@ import java.util.TimeZone;
 public class TaskActivity extends AppCompatActivity {
 
     Button saveButton;
-    //MaterialDatePicker simpleDatePicker;
     Slider slider;
     EditText taskName;
     EditText taskDetails;
@@ -52,11 +51,6 @@ public class TaskActivity extends AppCompatActivity {
 
     TextInputLayout tilTaskName, tilTaskDetails, tilDate, tilSlider;
     //validation from https://www.youtube.com/watch?v=qcDlcITNqnE&ab_channel=CodingWithTea
-
-
-
-
-    // TextInputLayout tilTaskName, tilSlider, tilDate, tilTaskDetails;
 
 
     @Override
@@ -249,14 +243,21 @@ public class TaskActivity extends AppCompatActivity {
 
     }
 
-    private boolean validateDate() {
+    private boolean validateDate(){
+        boolean r;
+        try{
+             r= validateDateExc();
+        } catch (ParseException e) {
+            tilDate.setError("Date Field can not be left empty!");
+            r = false;
+        }
+        return r;
+    }
+    private boolean validateDateExc() throws ParseException {
         String value = tilDate.getEditText().getText().toString().trim();
         Date date2 = null;
-        try {
-            date2 = (new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)).parse(value);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        date2 = (new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)).parse(value);
+
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
         long difference_In_Time = date2.getTime()-today.getTime();
@@ -274,6 +275,7 @@ public class TaskActivity extends AppCompatActivity {
             tilDate.setErrorEnabled(false);
             return true;
         }
+
 
     }
     private boolean validateSlider(){

@@ -45,7 +45,7 @@ public class TasksAdapter extends
         View itemView = inflater.inflate(R.layout.layout_tasks, parent,
                 false);
         return new ViewHolder(itemView);
-    }
+    } // inflate layout layout_tasks
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
@@ -94,7 +94,7 @@ public class TasksAdapter extends
             }
             else{ progressTextView.setTextColor(Color.RED);}
         }
-    }
+    }// set all values according
     @Override
     public int getItemCount() {
         if(num != -1){
@@ -107,6 +107,7 @@ public class TasksAdapter extends
         return items.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
+        //view holder
         public TextView titleTextView;
         public TextView detailsTextView;
         public TextView dueDateTextView;
@@ -158,7 +159,7 @@ public class TasksAdapter extends
                     }
                     dbHelper.updateTaskById(task);
                     dbHelper.close();
-                }
+                } // action button for archiving /dearchiving
             });
             editBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -171,7 +172,7 @@ public class TasksAdapter extends
 
                     notifyDataSetChanged();
 
-                }
+                } // edit btn to edit
             });
             deleteBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -185,7 +186,7 @@ public class TasksAdapter extends
                     notifyDataSetChanged();
                     dbHelper.close();
                 }
-            });
+            });// delete btn
         }
 
         @SuppressLint("ResourceAsColor")
@@ -195,10 +196,9 @@ public class TasksAdapter extends
             intent.putExtra("ID", id);
             intent.putExtra("TaskActivity", "Edit");
             v.getContext().startActivity(intent);
-            //someActivityResultLauncher.launch(intent);
             //set edit details
 
             notifyDataSetChanged();
-        }
+        } //
     }
 }

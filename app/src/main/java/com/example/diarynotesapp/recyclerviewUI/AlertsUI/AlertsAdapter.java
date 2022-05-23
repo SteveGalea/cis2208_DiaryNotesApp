@@ -22,8 +22,9 @@ import java.util.Locale;
 
 public class AlertsAdapter extends
         RecyclerView.Adapter<AlertsAdapter.ViewHolder> {
+    // declarations for alerts adapter
     private List<com.example.diarynotesapp.recyclerviewUI.TasksUI.Task> items;
-    private int num = -1;
+
     public AlertsAdapter(List<Task> items) {
         this.items = items;
     }
@@ -38,7 +39,8 @@ public class AlertsAdapter extends
         View itemView = inflater.inflate(R.layout.layout_card_alerts, parent,
                 false);
         return new ViewHolder(itemView);
-    }
+    }  // card item obtained by Layout inflater
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
@@ -48,47 +50,40 @@ public class AlertsAdapter extends
         TextView titleTextView = holder.titleTextView;
         TextView detailsTextView = holder.detailsTextView;
 
-
+        // date subtraction
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
         String date = item.getDateDue();
-
-
+        //catch in case of errors
         Date date2 = null;
         try {
             date2 = (new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)).parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        // compute
+        assert date2 != null;
         long difference_In_Time = date2.getTime()-today.getTime();
-
-
+        // convert to days
         long computedDaysLeft
                 = 1+(difference_In_Time
                 / (1000 * 60 * 60 * 24))
                 % 365;
-
+        // initialised data
         String title = computedDaysLeft == 1? item.getName()+" due in "+computedDaysLeft+" day" : item.getName()+" due in "+computedDaysLeft+" days";
-
         String details = "Due Date "+item.getDateDue();
-
+        // set in card
         titleTextView.setText(title);
         detailsTextView.setText(details);
-    }
+    }// binds data to card.
+
     @Override
     public int getItemCount() {
-        if(num != -1){
-            if(items.size() < num){
-                return items.size();
-            }else{
-                return num;
-            }
-        }
         return items.size();
-    }
+    } // get item count
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        // declare and initialise ViewHolder of card
         public TextView titleTextView;
         public TextView detailsTextView;
         public ViewHolder(final View itemView) {

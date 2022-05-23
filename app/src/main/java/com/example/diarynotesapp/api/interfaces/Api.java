@@ -11,6 +11,4 @@ public interface Api {
     String BASE_URL = "https://type.fit/api/";
     @GET("quotes")
     Call<List<Quote>> getQuotes(); // gets all quotes
-    @GET("quotes/{id}")
-    Call<Quote> getQuoteById(@Path("id") int id); // gets a quote by id
 }

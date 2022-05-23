@@ -94,13 +94,13 @@ public class NotesAdapter extends
 
         Button favBtn = holder.favBtn;
         String compareItem = item.getFavourite();
-        if(compareItem == null){
+        if(item.getFavourite() == null){
             compareItem="";
         }
         if(compareItem.equals("Favourites")){
             favBtn.setText("Undo");
         }else{
-            favBtn.setText("Favourites");
+            favBtn.setText("Favourite");
         }
         if(!imageUrl.equals("")) {
             imageViewCard.setImageBitmap(StringToBitMap(item.getImageURL()));
@@ -176,17 +176,26 @@ public class NotesAdapter extends
                     Note note = dbHelperNotes.getNoteById(id);
 
 
+                    System.out.println("note:"+note.getTitle());
 
-
-                    if(note.getFavourite().equals("Favourites")){
-                        favBtn.setText("Undo");
-                        note.setFavourite("");
-                        Toast.makeText(v.getContext(), note.getTitle()+" Added to Favourites", Toast.LENGTH_SHORT)
-                                .show();
-                    }else if(note.getFavourite().equals("")){
+                    String favCheck = note.getFavourite();
+                    System.out.println(favCheck);
+                    if(note.getFavourite()==null){
+                        favCheck = "";
+                    }
+                    if(favCheck.equals("Favourites")){
+                        // item is in favourites, we now remove it from favourites
+                        // reset fav btn set text to favourite
                         favBtn.setText("Favourite");
-                        note.setFavourite("Favourites");
+                        note.setFavourite("");
                         Toast.makeText(v.getContext(), note.getTitle()+" Removed from Favourites", Toast.LENGTH_SHORT)
+                                .show();
+                    }else if(favCheck.equals("")){
+                        // item is not in favourties. we now add it to favourites
+                        // reset fav btn to undo because we have now favourited it
+                        favBtn.setText("Undo");
+                        note.setFavourite("Favourites");
+                        Toast.makeText(v.getContext(), note.getTitle()+" Added to Favourites", Toast.LENGTH_SHORT)
                                 .show();
                     }
                     dbHelperNotes.updateNoteById(note);

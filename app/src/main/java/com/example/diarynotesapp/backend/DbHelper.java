@@ -5,17 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Base64;
+
 
 import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
 import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -85,7 +80,8 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
         db.close();
     }
-    //insert
+
+    //insert methods
     public long insertTask(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -98,7 +94,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 values);
         db.close();
         return id;
-    }
+    } // inserts a task and returns the location where it was inserted
+
     public long insertNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -112,28 +109,11 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
-    public String BitMapToString(Bitmap bitmap){
-
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp=Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
-    public Bitmap StringToBitMap(String encodedString){
-        try {
-            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
+    // inserts a note and returns the id where it was inserted
 
 
 
-    // update
+    // update methods
     public void updateTaskById(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -144,7 +124,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(_flag, task.getFlag());
         db.update(TaskDb.TaskEntry.TABLE_NAME,  values, "_id =?", new String[]{String.valueOf(task.getId())});
         db.close();
-    }
+    } // sets the passed updated task into the database
 
     public void updateNoteById(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -156,7 +136,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(_date, note.getDate());
         db.update(NoteDb.NoteEntry.TABLE_NAME,  values, "_id =?", new String[]{String.valueOf(note.getId())});
         db.close();
-    }
+    } // sets the passed updated note into the database
 
     //get all
     public ArrayList<Task> getTasks() {
@@ -194,7 +174,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return tasks;
-    }
+    } // uses a cursor to traverse each row and append task to an arraylist. this array list is returned to the class using it to update the contents being displayed on the UI
 
     public ArrayList<Note> getNotes() {
         ArrayList<Note> notes = new ArrayList<>();
@@ -232,9 +212,9 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return notes;
-    }
+    } // similarly uses a cursor to get all notes from database to an arraylist
 
-    //get
+    //get methods by ID
     public Task getTaskById(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] projection = {
@@ -279,7 +259,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return task;
-    }
+    } // gets the desired task using cursor
 
     public Note getNoteById(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -323,40 +303,45 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return note;
-    }
+    } // similarly gets the required note using a cursor
 
-    //removal
+    //removal methods
     public void removeTaskById(long id) {
 
         // Filter results WHERE "id" = condition
         String selection = BaseColumns._ID + " = ?";
-        System.out.println(BaseColumns._ID );
+        //System.out.println(BaseColumns._ID );
         String[] selectionArgs = new String[]{String.valueOf(id)};
 
-        System.out.println(selectionArgs[0]);
+        //System.out.println(selectionArgs[0]);
         int deletedRows= deleteTaskDataById(selectionArgs[0]);
         System.out.println("deleted:"+deletedRows);
-    }
+    } // remove a task as specified by id
+
     public int deleteTaskDataById(String Id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int deletedRows = db.delete(TaskDb.TaskEntry.TABLE_NAME, "_id = ?", new String[] {Id});
         db.close();
         return deletedRows;
-    }
+    } // actual db interaction.. returns deleted rows matching db.deletec parameters
+
+    //similarly remove for notes
     public void removeNoteById(long id) {
         // Filter results WHERE "id" = condition
         String selection = BaseColumns._ID + " = ?";
         System.out.println(BaseColumns._ID );
         String[] selectionArgs = new String[]{String.valueOf(id)};
 
-        System.out.println(selectionArgs[0]);
+        //System.out.println(selectionArgs[0]);
         int deletedRows= deleteNoteDataById(selectionArgs[0]);
         System.out.println("deleted:"+deletedRows);
     }
+    // similar remove note by id from database
+
     public int deleteNoteDataById(String Id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int deletedRows = db.delete(NoteDb.NoteEntry.TABLE_NAME, "_id = ?", new String[] {Id});
         db.close();
         return deletedRows;
-    }
+    } // delete note data from database
 }

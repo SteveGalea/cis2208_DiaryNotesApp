@@ -3,12 +3,11 @@ package com.example.diarynotesapp.backend;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-//https://github.com/Vysh01/AndroidImageResizer/blob/master/ImageResizer.java
+//Obtained from : https://github.com/Vysh01/AndroidImageResizer/blob/master/ImageResizer.java
+//Author : Vysh01
+//Accessed on 23rd May 2022
 public class ImageResizer {
 
-    //For Image Size 640*480, use MAX_SIZE =  307200 as 640*480 307200
-    //private static long MAX_SIZE = 360000;
-    //private static long THUMB_SIZE = 6553;
 
     public static Bitmap reduceBitmapSize(Bitmap bitmap,int MAX_SIZE) {
         double ratioSquare;
@@ -23,7 +22,7 @@ public class ImageResizer {
         int requiredHeight = (int) Math.round(bitmapHeight / ratio);
         int requiredWidth = (int) Math.round(bitmapWidth / ratio);
         return Bitmap.createScaledBitmap(bitmap, requiredWidth, requiredHeight, true);
-    }
+    } // reduces bitmap size, method is used
 
     public static Bitmap generateThumb(Bitmap bitmap, int THUMB_SIZE) {
         double ratioSquare;

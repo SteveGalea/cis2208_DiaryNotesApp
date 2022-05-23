@@ -10,6 +10,7 @@ public class Task implements Serializable {
     private String _dateDue;
     private String _flag;
 
+    //constructor
     public Task(long id, String _name, String _details, String _progress, String _dateDue, String _flag) {
         this.id = id;
         this._name = _name;

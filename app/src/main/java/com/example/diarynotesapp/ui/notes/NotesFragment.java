@@ -138,7 +138,9 @@ public class NotesFragment extends Fragment {
             }
         });
         return root;
-    }
+    }// on create view run this
+
+
     private void filter(String text) {
         // creating a new array list to filter our data.
         ArrayList<Note> filteredlist = new ArrayList<>();
@@ -147,54 +149,40 @@ public class NotesFragment extends Fragment {
         for (Note item : notes) {
             // checking if the entered string matched with any item of our recycler view.
             if (item.getTitle().toLowerCase().contains(text.toLowerCase())) {
-                // if the item is matched we are
-                // adding it to our filtered list.
                 filteredlist.add(item);
                 Toast.makeText(this.getContext(), "See the matching items!", Toast.LENGTH_SHORT).show();
             }
         }
         if (filteredlist.isEmpty()) {
-            // if no item is added in filtered list we are
-            // displaying a toast message as no data found.
         } else {
-            // at last we are passing that filtered
-            // list to our adapter class.
             adapter.filterList(filteredlist);
-            //updateNotesList(filteredlist);
         }
-    }
+    } // search
 
     private void handleFavouritesChip(boolean value) {
         // creating a new array list to filter our data.
         ArrayList<Note> filteredlist = new ArrayList<>();
 
         String compareElem = "";
-        if(value == true){
-            compareElem = "Favourites";
-            for (Note item : notes) {
-                // checking if the entered string matched with any item of our recycler view.
-                String compareFav = item.getFavourite();
-                if(compareFav == null){
-                    compareFav="";
-                }
-                if (compareFav.toLowerCase().contains(compareElem.toLowerCase())) {
-                    // if the item is matched we are
-                    // adding it to our filtered list.
-                    System.out.println(item.getTitle()+": "+item.getFavourite()+"");
-                    filteredlist.add(item);
-                    Toast.makeText(this.getContext(), "Filtered by filter click!", Toast.LENGTH_SHORT).show();
-                }
+        compareElem = "Favourites";
+        for (Note item : notes) {
+            // checking if the entered string matched with any item of our recycler view.
+            String compareFav = item.getFavourite();
+            if(compareFav == null){
+                compareFav="";
             }
-        }else{
-            filteredlist = notes;
+            if (compareFav.toLowerCase().contains(compareElem.toLowerCase())) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                System.out.println(item.getTitle()+": "+item.getFavourite()+"");
+                filteredlist.add(item);
+                Toast.makeText(this.getContext(), "Filtered by filter click!", Toast.LENGTH_SHORT).show();
+            }
         }
-        // running a for loop to compare elements.
-
+        // running a for loop to compare elements
         adapter.filterList(filteredlist);
+    } //
 
-        //updateNotesList(filteredlist);
-
-    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

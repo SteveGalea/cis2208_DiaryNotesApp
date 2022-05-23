@@ -21,15 +21,15 @@ public class NotesViewModel extends ViewModel {
         mText = new MutableLiveData<>();
         notesMutable = new MutableLiveData<>();
         mText.setValue("Notes");
-    }
+    } // setting mutable data
 
     public LiveData<String> getText() {
         return mText;
-    }
+    } // get title
     public LiveData<List<Note>> getNotesMutable(Context context) {
         DbHelper dbHelper = new DbHelper(context);
         ArrayList<Note> notes= dbHelper.getNotes();
         notesMutable.setValue(notes);
         return notesMutable;
-    }
+    } // get notes
 }

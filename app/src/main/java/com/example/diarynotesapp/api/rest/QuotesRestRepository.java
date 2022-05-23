@@ -19,21 +19,26 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class QuotesRestRepository {
+    //singleton instance
     private static QuotesRestRepository instance = null;
     private Api api;
+
+    //constructor
     private QuotesRestRepository() {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(Api.class);
     }
+
     public static synchronized QuotesRestRepository getInstance() {
         if (instance == null) {
             instance = new QuotesRestRepository();
         }
-
+        // returns singleton instance
         return instance;
     }
+
     public LiveData<Quote> fetchQuote() {
         final MutableLiveData<Quote> quote = new MutableLiveData<>();
         api.getQuotes().enqueue(new Callback<List<Quote>>() {
@@ -44,14 +49,11 @@ public class QuotesRestRepository {
                     return;
                 }
                 List<Quote> quotes = response.body(); // get all quotes
-                /*for(Quote quoteX :quotes){
-                    System.out.println(quoteX); // randomize
-                    quote.setValue(quoteX);
-                }*/
                 Random rand = new Random();
                 int randInt = rand.nextInt(quotes.size());
                 Quote random = quotes.get(randInt);
                 quote.setValue(random);
+                //fetch random quote
             }
             @Override
             public void onFailure(@NonNull Call<List<Quote>> call, @NonNull
@@ -59,8 +61,8 @@ public class QuotesRestRepository {
                 Log.i("fetchQuotes", call.request().toString());
                 Log.e("fetchQuotes", t.getMessage());
                 quote.setValue(null);
-            }
+            }//in case of no internet connection
         });
         return quote;
-    }
+    }// attempt to get a quote: if quote provided return random quote, else provides null value.
 }

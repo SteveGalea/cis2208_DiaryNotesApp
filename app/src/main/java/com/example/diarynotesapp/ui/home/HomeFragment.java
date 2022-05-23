@@ -1,5 +1,6 @@
 package com.example.diarynotesapp.ui.home;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,8 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diarynotesapp.databinding.FragmentHomeBinding;
-import com.example.diarynotesapp.recyclerviewUI.NotesUI.Note;
-import com.example.diarynotesapp.recyclerviewUI.NotesUI.NotesAdapter;
 import com.example.diarynotesapp.R;
 import com.example.diarynotesapp.recyclerviewUI.TasksUI.Task;
 import com.example.diarynotesapp.recyclerviewUI.TasksUI.TasksAdapter;
@@ -41,29 +40,17 @@ import java.util.List;
 
 public class HomeFragment extends Fragment{
 
+    //declarations
     FragmentHomeBinding binding;
-    private TextView dateTimeDisplay;
     private TextView quoteDisplay;
-    private Calendar calendar;
-    private SimpleDateFormat dateFormat;
-    private String date;
     private Button refreshQuoteButton;
-    private Button redirectButtonTasks;
-    private Button redirectButtonNotes;
-    private ExtendedFloatingActionButton extendedFabTask;
-    private ExtendedFloatingActionButton extendedFabNote;
     private HomeViewModel homeViewModel;
-
     private TasksAdapter adapterTasks;
-
-
     private RecyclerView tasksView;
-
-
     private List<Task> tasks = new ArrayList<>();
 
 
-
+    //gets
     public ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -80,6 +67,7 @@ public class HomeFragment extends Fragment{
                 }
             });
 
+    @SuppressLint("SimpleDateFormat")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         tasks.clear();
@@ -90,64 +78,54 @@ public class HomeFragment extends Fragment{
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
+        // initialisations
+        quoteDisplay = (TextView) root.findViewById(R.id.quote);
+        refreshQuoteButton = (Button) root.findViewById(R.id.refreshQuoteButton);
 
-        extendedFabNote = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_note);
-        //adding date
-        //get view and calendar
-        dateTimeDisplay = (TextView)root.findViewById(R.id.text_display_date);
-        calendar = Calendar.getInstance();
-        //set format
-        //dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        date = dateFormat.format(calendar.getTime());
+        //declaration and initialising of algebraic classes
+        Button redirectButtonTasks = (Button) root.findViewById(R.id.redirectButtonTasks);
+        Button redirectButtonNotes = (Button) root.findViewById(R.id.redirectButtonNotes);
+        ExtendedFloatingActionButton extendedFabTask = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_task);
+        ExtendedFloatingActionButton extendedFabNote = (ExtendedFloatingActionButton) root.findViewById(R.id.extended_fab_note);
+        TextView dateTimeDisplay = (TextView) root.findViewById(R.id.text_display_date);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String date = dateFormat.format(calendar.getTime());
         dateTimeDisplay.setText(date);
+
+        final TextView textView = binding.textHome;
+        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        tasksView = root.findViewById(R.id.tasks_list);
+        resetTasksRecyclerView();
 
 
         //FAB
-            extendedFabTask.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    System.out.println("here");
-                    Toast toast = Toast.makeText(v.getContext(),
-                            "Adding new Task",
-                            Toast.LENGTH_SHORT);
-                    toast.show();
-                    Intent intent1 = new Intent(getActivity(), TaskActivity.class);
-                    intent1.putExtra("TaskActivity", "Add");
-                    someActivityResultLauncher.launch(intent1);
-                    //adapter = new AlertsAdapter(tasks);
-
-                    //onCreateView(inflater,container, savedInstanceState);
-
-                }
-            });
-            extendedFabNote.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    System.out.println("here");
-                    Toast toast = Toast.makeText(v.getContext(),
-                            "Adding new Note",
-                            Toast.LENGTH_SHORT);
-                    toast.show();
-                   Intent intent2 = new Intent(getActivity(), NoteActivity.class);
-                   intent2.putExtra("NoteActivity", "Add");
-                   someActivityResultLauncher.launch(intent2);
-                }
-            });
-        //quote
-        quoteDisplay = (TextView) root.findViewById(R.id.quote);
-
-
-        refreshQuoteButton = (Button) root.findViewById(R.id.refreshQuoteButton);
-        redirectButtonTasks = (Button) root.findViewById(R.id.redirectButtonTasks);
-        redirectButtonNotes = (Button) root.findViewById(R.id.redirectButtonNotes);
-
-        refreshQuoteButton.post(new Runnable(){
+        extendedFabTask.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void run() {
-                refreshQuoteButton.performClick();
+            public void onClick(View v){
+                System.out.println("inside new task fab");
+                Toast toast = Toast.makeText(v.getContext(),
+                        "Adding new Task",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                Intent intent1 = new Intent(getActivity(), TaskActivity.class);
+                intent1.putExtra("TaskActivity", "Add");
+                someActivityResultLauncher.launch(intent1);
+                // launches a new intent : launch task activity, and convey extra data by putting "Add" with intent. "Add" will open a new empty activity class, with no prefilled values, to the contrary of "Edit"
             }
+        });
+        extendedFabNote.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println("inside new note fab");
+                Toast toast = Toast.makeText(v.getContext(),
+                        "Adding new Note",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+               Intent intent2 = new Intent(getActivity(), NoteActivity.class);
+               intent2.putExtra("NoteActivity", "Add");
+               someActivityResultLauncher.launch(intent2);
+            } // similarly initiates a new intent to launch a new note activity (not edit note activity)
         });
 
 
@@ -156,23 +134,23 @@ public class HomeFragment extends Fragment{
             public void run() {
                 refreshQuoteButton.performClick();
             }
-        });
-        System.out.println("button clicked to fill data");
+        }); // click to fill data
 
 
         //load quote
         refreshQuoteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                System.out.println("here");
+                System.out.println("getting new quote");
                 QuotesRestRepository.getInstance().fetchQuote().observe(getViewLifecycleOwner(), this::populateQuoteContainer);
                 //System.out.println("Quote: "+q.getText());
                 Toast toast = Toast.makeText(v.getContext(),
                         "Getting a new Quote",
                         Toast.LENGTH_SHORT);
                 toast.show();
-            }
+            } // function on click use singleton instance and pass quote(if any) to below method
 
+            @SuppressLint("SetTextI18n")
             public void populateQuoteContainer(Quote quote) {
                 // checking quote (if Get request was successful returns quote, else returns null)
                 if(quote != null){
@@ -183,7 +161,7 @@ public class HomeFragment extends Fragment{
                 }else{
                     quoteDisplay.setText("Failed to fetch a quote because you are not connected to the internet! Otherwise, the quote provider website is down.");
 
-                }
+                }// sets the returned result in the layout
             }
         });
 
@@ -196,13 +174,13 @@ public class HomeFragment extends Fragment{
                         "Going to tasks",
                         Toast.LENGTH_SHORT);
                 toast.show();
-                //Navigation.findNavController(v).navigate(R.id.action_navigation_home_to_navigation_tasks);
                 BottomNavigationView bottomNavigationView;
                 bottomNavigationView = (BottomNavigationView) getActivity().findViewById(R.id.nav_view);
                 bottomNavigationView.setSelectedItemId(R.id.navigation_tasks);
 
             }
-        });
+        });// redirects user to task screen
+
         redirectButtonNotes.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -211,63 +189,47 @@ public class HomeFragment extends Fragment{
                         "Going to notes",
                         Toast.LENGTH_SHORT);
                 toast.show();
-
-                // bottom navigation click
-
                 BottomNavigationView bottomNavigationView;
                 bottomNavigationView = (BottomNavigationView) getActivity().findViewById(R.id.nav_view);
                 bottomNavigationView.setSelectedItemId(R.id.navigation_notes);
-
-
             }
-        });
-
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-        tasksView = root.findViewById(R.id.tasks_list);
-
-        resetTasksRecyclerView();
-
-
-
+        }); // redirects users to home screen
         return root;
     }
 
+    //recycler view methods
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //tasks.clear();
         binding = null;
-    }
+    } // destroys view
 
     private void fetchTasksItems() {
         homeViewModel.getTasksMutable(getContext()).observe(getViewLifecycleOwner(),
                 this::updateTasksList);
-    }
+    } // gets an updated version of recycler view in view model
 
     private void setUpTasksRecyclerView() {
-        //adapter = new AlertsAdapter(tasks,5);
         adapterTasks = new TasksAdapter(tasks);
-        adapterTasks.setNum(3);
+        adapterTasks.setNum(3); // for overview
         tasksView.setAdapter(adapterTasks);
         tasksView.setLayoutManager(new LinearLayoutManager(tasksView.getContext()));
-    }
+    } // set up recycler view to top 3 tasks to not clutter home screen
 
     private void updateTasksList(List<Task> newTasks) {
         tasks.clear();
         tasks.addAll(newTasks);
         adapterTasks.notifyDataSetChanged();
-    }
+    } // called by fetchTasksItems... clears and re-adds all tasks to recycler view
+
     public void resetTasksRecyclerView(){
         tasks.clear();
         setUpTasksRecyclerView();
         fetchTasksItems();
-
-    }
+    } // recycler view essential methods called
 
     public void onResume() {
         resetTasksRecyclerView();
         super.onResume();
-    }
+    } // when come back to fragment, recall recyclerview
 }

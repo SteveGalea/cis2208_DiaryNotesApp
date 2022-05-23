@@ -28,28 +28,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-
-        /*AlertDialog.Builder builder;
-        int sdk = android.os.Build.VERSION.SDK_INT;
-        if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB)
-        {
-            builder = new AlertDialog.Builder(this);
-        }
-        else
-        {
-            builder = new AlertDialog.Builder(this, animazione);
-        }
-        builder.setView(view).create();
-        TextView text=(TextView) findViewById(R.id.infoView1);
-        builder.setCancelable(false);
-        builder.setPositiveButton("Chiudi", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                tips = 0;
-                dialog.cancel();
-            }
-        });
-        builder.show();*/
-
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

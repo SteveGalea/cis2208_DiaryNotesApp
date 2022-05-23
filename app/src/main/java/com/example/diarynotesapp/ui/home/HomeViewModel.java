@@ -14,25 +14,25 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel {
 
+    //declarations
     private final MutableLiveData<String> mText;
     private MutableLiveData<List<Task>> tasksMutable;
 
     public HomeViewModel() {
+        // initialise and set live data
         mText = new MutableLiveData<>();
         tasksMutable = new MutableLiveData<>();
-        //mText.setValue("This is home fragment");
         mText.setValue("Today");
     }
 
     public LiveData<String> getText() {
         return mText;
-    }
+    }  // gets live data text
+
     public LiveData<List<Task>> getTasksMutable(Context context) {
         DbHelper dbHelper = new DbHelper(context);
         ArrayList<Task> tasks= dbHelper.getTasks();
         tasksMutable.setValue(tasks);
         return tasksMutable;
-    }
-
-
+    } // gets mutable tasks
 }
