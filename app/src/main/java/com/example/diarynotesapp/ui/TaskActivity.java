@@ -219,7 +219,7 @@ public class TaskActivity extends AppCompatActivity {
             return false;
         }
         else if(value.length()>50){
-            tilTaskDetails.setError("Too many characters inputted! (Maximum 50 characters)");
+            tilTaskName.setError("Too many characters inputted! (Maximum 50 characters)");
             return false;
         }
         else{
